@@ -1,12 +1,16 @@
 :host {
     display: block;
+    width: 100%;
 }
 
+main {
+    padding: 0 3rem;
+    width: 100%;
+}
 .dashboard-container {
     display: block;
     width: 100%;
     background-color: var(--bg-secondary);
-    padding: 2rem;
     position: relative;
     padding-bottom: 120px;
     transition: background-color 0.3s ease;
@@ -19,7 +23,6 @@
     align-items: center;
     background: var(--bg-primary);
     padding: 1rem 1.5rem;
-    border-radius: 8px;
     box-shadow: var(--card-shadow);
     margin-bottom: 2rem;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
@@ -28,10 +31,12 @@
 .navbar-brand h2 {
     margin: 0;
     font-size: 1.5rem;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     background-clip: text;
+    color: var(--brand-color);
+}
+
+[data-theme="dark"] .navbar-brand h2 {
+    color: var(--brand-color);
 }
 
 .navbar-actions {
@@ -167,12 +172,10 @@
 }
 
 .dashboard-header h1 {
-    /* color: var(--text-primary); */
+    color: var(--text-primary);
     font-size: 2rem;
     margin: 0;
-    background: var(--gradient-primary);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
@@ -201,9 +204,10 @@
 }
 
 .stat-icon {
-    font-size: 2rem;
     min-width: 60px;
+    height: auto;
     text-align: center;
+    margin-right: 1rem;
 }
 
 .stat-content {
@@ -218,7 +222,7 @@
 }
 
 .stat-value {
-    color: #667eea;
+    color: var(--user-bg-primary);
     font-size: 2rem;
     font-weight: 700;
     margin: 0;
@@ -231,7 +235,6 @@
 
 .search-input {
     width: 100%;
-    max-width: 600px;
     padding: 0.75rem 1rem;
     border: 2px solid var(--input-border);
     border-radius: 4px;
@@ -389,6 +392,7 @@
     padding: 0.5rem;
     border-radius: 4px;
     transition: background-color 0.2s ease;
+    color: var(--user-bg-primary);
 }
 
 .btn-action:hover {
@@ -452,6 +456,7 @@
 
     .navbar-brand h2 {
         font-size: 1.25rem;
+        color: var(--user-bg-primary);
     }
 
     .user-avatar {

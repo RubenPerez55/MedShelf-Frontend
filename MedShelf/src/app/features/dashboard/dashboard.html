@@ -33,87 +33,96 @@
             </div>
         </div>
     </nav>
+    <main>
+        <!-- Header -->
+        <header class="dashboard-header">
+            <h1>Mi botiquín MedShelf</h1>
+        </header>
 
-    <!-- Header -->
-    <header class="dashboard-header">
-        <h1>Mi botiquín MedShelf</h1>
-    </header>
-
-    <!-- Statistics Section -->
-    <section class="stats-section">
-        <div class="stat-card">
-            <div class="stat-icon">⚠️</div>
-            <div class="stat-content">
-                <p class="stat-label">Caducados</p>
-                <p class="stat-value">{{ caducados }}</p>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon">⏰</div>
-            <div class="stat-content">
-                <p class="stat-label">Próximos a vencer</p>
-                <p class="stat-value">{{ proximosVencer }}</p>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon">✅</div>
-            <div class="stat-content">
-                <p class="stat-label">Vigentes</p>
-                <p class="stat-value">{{ vigentes }}</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Search Section -->
-    <section class="search-section">
-        <input 
-            type="text" 
-            class="search-input" 
-            placeholder="Buscar medicamento..."
-            [(ngModel)]="searchTerm"
-            (ngModelChange)="filtrarMedicamentos()"
-        >
-    </section>
-
-    <!-- Medications List -->
-    <section class="medications-section">
-        <div class="medications-list">
-            <div *ngFor="let med of medicamentosFiltrados" class="medication-card" [ngClass]="'status-' + med.estado">
-                <div class="med-header">
-                    <h3>{{ med.nombre }}</h3>
-                    <span class="med-status">{{ med.estado }}</span>
+        <!-- Statistics Section -->
+        <section class="stats-section">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="auto" viewBox="0 0 24 24" fill="none" stroke="#7bb17e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thumbs-up-icon lucide-thumbs-up"><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/><path d="M7 10v12"/></svg>
                 </div>
-                
-                <div class="med-details">
-                    <div class="med-info">
-                        <p><strong>Cantidad:</strong> {{ med.cantidad }} {{ med.unidad }}</p>
-                        <p><strong>Dosis:</strong> {{ med.dosis }}</p>
+                <div class="stat-content">
+                    <p class="stat-label">Vigentes</p>
+                    <p class="stat-value">{{ vigentes }}</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="auto" viewBox="0 0 24 24" fill="none" stroke="#e9d502" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock-icon lucide-clock"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Próximos a vencer</p>
+                    <p class="stat-value">{{ proximosVencer }}</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="auto" viewBox="0 0 24 24" fill="none" stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert-icon lucide-triangle-alert"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Caducados</p>
+                    <p class="stat-value">{{ caducados }}</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Section -->
+        <section class="search-section">
+            <input 
+                type="text" 
+                class="search-input" 
+                placeholder="Buscar medicamento..."
+                [(ngModel)]="searchTerm"
+                (ngModelChange)="filtrarMedicamentos()"
+            >
+        </section>
+
+        <!-- Medications List -->
+        <section class="medications-section">
+            <div class="medications-list">
+                <div *ngFor="let med of medicamentosFiltrados" class="medication-card" [ngClass]="'status-' + med.estado">
+                    <div class="med-header">
+                        <h3>{{ med.nombre }}</h3>
+                        <span class="med-status">{{ med.estado }}</span>
                     </div>
                     
-                    <div class="med-expiry">
-                        <p><strong>Vencimiento:</strong></p>
-                        <p class="expiry-date">{{ med.fechaVencimiento | date:'dd/MM/yyyy' }}</p>
+                    <div class="med-details">
+                        <div class="med-info">
+                            <p><strong>Cantidad:</strong> {{ med.cantidad }} {{ med.unidad }}</p>
+                            <p><strong>Dosis:</strong> {{ med.dosis }}</p>
+                        </div>
+                        
+                        <div class="med-expiry">
+                            <p><strong>Vencimiento:</strong></p>
+                            <p class="expiry-date">{{ med.fechaVencimiento | date:'dd/MM/yyyy' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="med-actions">
+                        <button class="btn-action">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+                        </button>
+                        <button class="btn-action btn-delete">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-icon lucide-trash"><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        </button>
                     </div>
                 </div>
 
-                <div class="med-actions">
-                    <button class="btn-action">✏️</button>
-                    <button class="btn-action btn-delete">🗑️</button>
-                </div>
+                @if (medicamentosFiltrados.length === 0 ) {
+                    <div class="no-results">
+                        <p>No se encontraron medicamentos</p>
+                    </div>   
+                }
             </div>
+        </section>
 
-            @if (medicamentosFiltrados.length === 0 ) {
-                <div class="no-results">
-                    <p>No se encontraron medicamentos</p>
-                </div>   
-            }
-        </div>
-    </section>
-
-    <!-- Floating Action Button -->
-    <button class="fab" (click)="agregarMedicamento()" title="Agregar medicamento">
-        <span>+</span>
-    </button>
-</div>
+        <!-- Floating Action Button -->
+        <button class="fab" (click)="agregarMedicamento()" title="Agregar medicamento">
+            <span>+</span>
+        </button>
+    </main>

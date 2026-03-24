@@ -3,7 +3,7 @@
 
 /* Light Theme (Default) */
 :root {
-    --user-bg-primary: #1a1a1a;
+    --user-bg-primary: #414141;
     --bg-primary: #ffffff;
     --bg-secondary: #f5f5f5;
     --text-primary: #333333;
@@ -14,7 +14,8 @@
     --card-shadow-hover: 0 5px 20px rgba(0, 0, 0, 0.1);
     --input-border: #ddd;
     --navbar-bg: #ffffff;
-    --gradient-primary: linear-gradient(90deg,rgb(255, 255, 255) 0%, rgb(148, 255, 182) 80%);
+    --gradient-primary: linear-gradient(90deg,rgb(80, 165, 118) 0%, rgb(117, 252, 173) 80%);
+    --brand-color: #2e7d32;
 }
 
 /* Tema Oscuro */
@@ -30,6 +31,8 @@
     --card-shadow-hover: 0 5px 20px rgba(0, 0, 0, 0.5);
     --input-border: #444444;
     --navbar-bg: #252525;
+    --gradient-primary: linear-gradient(90deg,rgb(255, 255, 255) 0%, rgb(148, 255, 182) 80%);
+    --brand-color: #7bb17e;
 }
 
 * {
@@ -51,4 +54,5 @@ app-root {
     display: flex;
     flex-direction: column;
     height: 100%;
+    width: 100%;
 }

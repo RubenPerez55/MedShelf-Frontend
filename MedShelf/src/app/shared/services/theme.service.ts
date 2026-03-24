@@ -10,7 +10,6 @@ export class ThemeService {
   private themeSignal = signal<Theme>(this.getInitialTheme());
 
   constructor() {
-    // Efecto que se ejecuta cada vez que cambia el tema
     effect(() => {
       const theme = this.themeSignal();
       this.applyTheme(theme);
@@ -19,13 +18,13 @@ export class ThemeService {
   }
 
   private getInitialTheme(): Theme {
-    // Intenta obtener del localStorage
+    // Detecta de LocalStorage
     const savedTheme = localStorage.getItem(this.THEME_KEY) as Theme | null;
     if (savedTheme) {
       return savedTheme;
     }
 
-    // Si no hay guardado, detecta la preferencia del sistema
+    // Detecta del sistema operativo
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       return 'dark';
     }

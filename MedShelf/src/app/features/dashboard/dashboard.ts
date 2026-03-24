@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -22,6 +22,8 @@ interface Medicamento {
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit {
+  @ViewChild('userDropdown') userDropdown!: ElementRef;
+  
   medicamentos: Medicamento[] = [];
   medicamentosFiltrados: Medicamento[] = [];
   searchTerm: string = '';
@@ -175,6 +177,13 @@ export class Dashboard implements OnInit {
 
   toggleUserMenu() {
     this.showUserMenu = !this.showUserMenu;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (this.userDropdown && !this.userDropdown.nativeElement.contains(event.target)) {
+      this.showUserMenu = false;
+    }
   }
 
   cerrarSesion() {

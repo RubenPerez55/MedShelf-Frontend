@@ -14,14 +14,14 @@
     --card-shadow-hover: 0 5px 20px rgba(0, 0, 0, 0.1);
     --input-border: #ddd;
     --navbar-bg: #ffffff;
-    --gradient-primary: linear-gradient(90deg,rgb(119, 122, 187) 0%, rgba(163, 247, 190, 1) 100%);
+    --gradient-primary: linear-gradient(90deg,rgb(255, 255, 255) 0%, rgb(148, 255, 182) 80%);
 }
 
 /* Tema Oscuro */
 [data-theme="dark"] {
     --user-bg-primary: #ffffff;
-    --bg-primary: #1a1a1a;
-    --bg-secondary: #0f0f0f;
+    --bg-primary: #2b2b2b;
+    --bg-secondary: #111111;
     --text-primary: #e8e8e8;
     --text-secondary: #b0b0b0;
     --text-tertiary: #808080;

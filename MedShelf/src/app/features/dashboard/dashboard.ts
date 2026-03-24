@@ -129,6 +129,16 @@ export class Dashboard implements OnInit {
         fechaVencimiento: tresMeses,
         estado: 'vigente',
         indicaciones: 'Analgésico'
+      },
+      {
+        id: 9,
+        nombre: 'Ceptriaxona 800mg',
+        cantidad: 24,
+        unidad: 'tabletas',
+        dosis: '800mg cada 12 horas',
+        fechaVencimiento: unAño,
+        estado: 'vigente',
+        indicaciones: 'Antibiótico'
       }
     ];
 

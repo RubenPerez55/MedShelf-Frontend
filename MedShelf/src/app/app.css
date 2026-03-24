@@ -5,6 +5,6 @@
 }
 
 router-outlet {
-    flex: 1;
-    display: flex;
+    display: block;
+    width: 100%;
 }

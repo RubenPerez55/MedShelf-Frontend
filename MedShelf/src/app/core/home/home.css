@@ -1,3 +1,6 @@
+body {
+    background-color: #ffffff;
+}
 /* Navbar Styles */
 .navbar {
     background: white;
@@ -142,6 +145,10 @@ main {
 
 /* Features Section */
 .features {
+    background: #ffffff;
+}
+
+.features-content {
     max-width: 1200px;
     width: 100%;
     margin: 5rem auto;
@@ -196,9 +203,9 @@ main {
 .cta {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 4rem 2rem;
+    padding: 3rem 2rem;
     text-align: center;
-    margin: 4rem 0;
+    margin: 0;
 }
 
 .cta-content h2 {

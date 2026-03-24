@@ -1,5 +1,5 @@
 <div class="dashboard-container">
-    <!-- Top Navigation Bar -->
+    <!-- Navbar -->
     <nav class="dashboard-navbar">
         <div class="navbar-brand">
             <h2>MedShelf</h2>
@@ -15,7 +15,7 @@
                     <span>👤</span>
                 </div>
                 
-                <!-- Dropdown Menu -->
+                <!-- Menu -->
                 <div class="user-dropdown" [class.active]="showUserMenu">
                     <div class="dropdown-user-info">
                         <p class="user-name">Mi Cuenta</p>
@@ -25,7 +25,6 @@
                     <div class="dropdown-divider"></div>
                     
                     <button class="dropdown-item" (click)="cerrarSesion()">
-                        <span>🚪</span>
                         <span>Cerrar Sesión</span>
                     </button>
                 </div>

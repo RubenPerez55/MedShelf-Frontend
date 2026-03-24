@@ -13,7 +13,7 @@
     --card-shadow-hover: 0 5px 20px rgba(0, 0, 0, 0.1);
     --input-border: #ddd;
     --navbar-bg: #ffffff;
-    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-primary: linear-gradient(90deg,rgb(119, 122, 187) 0%, rgba(163, 247, 190, 1) 100%);
 }
 
 /* Dark Theme */

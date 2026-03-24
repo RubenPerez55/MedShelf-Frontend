@@ -67,7 +67,7 @@ main {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: var(--user-bg-primary);
+    background: var(--primary-contrast);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -222,7 +222,7 @@ main {
 }
 
 .stat-value {
-    color: var(--user-bg-primary);
+    color: var(--primary-contrast);
     font-size: 2rem;
     font-weight: 700;
     margin: 0;
@@ -392,7 +392,7 @@ main {
     padding: 0.5rem;
     border-radius: 4px;
     transition: background-color 0.2s ease;
-    color: var(--user-bg-primary);
+    color: var(--primary-contrast);
 }
 
 .btn-action:hover {
@@ -456,7 +456,7 @@ main {
 
     .navbar-brand h2 {
         font-size: 1.25rem;
-        color: var(--user-bg-primary);
+        color: var(--primary-contrast);
     }
 
     .user-avatar {

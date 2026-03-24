@@ -3,7 +3,7 @@
 
 /* Light Theme (Default) */
 :root {
-    --user-bg-primary: #414141;
+    --primary-contrast: #414141;
     --bg-primary: #ffffff;
     --bg-secondary: #f5f5f5;
     --text-primary: #333333;
@@ -20,7 +20,7 @@
 
 /* Tema Oscuro */
 [data-theme="dark"] {
-    --user-bg-primary: #ffffff;
+    --primary-contrast: #ffffff;
     --bg-primary: #2b2b2b;
     --bg-secondary: #111111;
     --text-primary: #e8e8e8;

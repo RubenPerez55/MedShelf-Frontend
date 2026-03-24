@@ -1,0 +1,116 @@
+<div class="dashboard-container">
+    <!-- Top Navigation Bar -->
+    <nav class="dashboard-navbar">
+        <div class="navbar-brand">
+            <h2>MedShelf</h2>
+        </div>
+        
+        <div class="navbar-actions">
+            <button class="theme-toggle" (click)="toggleTheme()" [title]="currentTheme === 'light' ? 'Modo oscuro' : 'Modo claro'">
+                <span>{{ currentTheme === 'light' ? '🌙' : '☀️' }}</span>
+            </button>
+            
+            <div class="navbar-user">
+                <div class="user-avatar" (click)="toggleUserMenu()">
+                    <span>👤</span>
+                </div>
+                
+                <!-- Dropdown Menu -->
+                <div class="user-dropdown" [class.active]="showUserMenu">
+                    <div class="dropdown-user-info">
+                        <p class="user-name">Mi Cuenta</p>
+                        <p class="user-email">usuario@medshelf.com</p>
+                    </div>
+                    
+                    <div class="dropdown-divider"></div>
+                    
+                    <button class="dropdown-item" (click)="cerrarSesion()">
+                        <span>🚪</span>
+                        <span>Cerrar Sesión</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="dashboard-header">
+        <h1>Mi botiquín MedShelf</h1>
+    </header>
+
+    <!-- Statistics Section -->
+    <section class="stats-section">
+        <div class="stat-card">
+            <div class="stat-icon">⚠️</div>
+            <div class="stat-content">
+                <p class="stat-label">Caducados</p>
+                <p class="stat-value">{{ caducados }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">⏰</div>
+            <div class="stat-content">
+                <p class="stat-label">Próximos a vencer</p>
+                <p class="stat-value">{{ proximosVencer }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-content">
+                <p class="stat-label">Vigentes</p>
+                <p class="stat-value">{{ vigentes }}</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <input 
+            type="text" 
+            class="search-input" 
+            placeholder="Buscar medicamento..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="filtrarMedicamentos()"
+        >
+    </section>
+
+    <!-- Medications List -->
+    <section class="medications-section">
+        <div class="medications-list">
+            <div *ngFor="let med of medicamentosFiltrados" class="medication-card" [ngClass]="'status-' + med.estado">
+                <div class="med-header">
+                    <h3>{{ med.nombre }}</h3>
+                    <span class="med-status">{{ med.estado }}</span>
+                </div>
+                
+                <div class="med-details">
+                    <div class="med-info">
+                        <p><strong>Cantidad:</strong> {{ med.cantidad }} {{ med.unidad }}</p>
+                        <p><strong>Dosis:</strong> {{ med.dosis }}</p>
+                    </div>
+                    
+                    <div class="med-expiry">
+                        <p><strong>Vencimiento:</strong></p>
+                        <p class="expiry-date">{{ med.fechaVencimiento | date:'dd/MM/yyyy' }}</p>
+                    </div>
+                </div>
+
+                <div class="med-actions">
+                    <button class="btn-action">✏️</button>
+                    <button class="btn-action btn-delete">🗑️</button>
+                </div>
+            </div>
+
+            <div *ngIf="medicamentosFiltrados.length === 0" class="no-results">
+                <p>No se encontraron medicamentos</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Action Button -->
+    <button class="fab" (click)="agregarMedicamento()" title="Agregar medicamento">
+        <span>+</span>
+    </button>
+</div>

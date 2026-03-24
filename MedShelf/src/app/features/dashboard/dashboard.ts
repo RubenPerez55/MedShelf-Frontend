@@ -13,6 +13,7 @@ interface Medicamento {
   fechaVencimiento: Date;
   estado: 'vigente' | 'proximoVencer' | 'caducado';
   indicaciones?: string;
+  selected?: boolean;
 }
 
 @Component({
@@ -25,7 +26,7 @@ export class Dashboard implements OnInit {
   @ViewChild('userDropdown') userDropdown!: ElementRef;
   
   medicamentos: Medicamento[] = [];
-  medicamentosFiltrados: Medicamento[] = [];
+  private _medicamentosFiltrados: Medicamento[] = [];
   searchTerm: string = '';
 
   caducados: number = 0;
@@ -34,6 +35,16 @@ export class Dashboard implements OnInit {
 
   showUserMenu: boolean = false;
   currentTheme: Theme = 'light';
+  openMedDropdowns: Set<number> = new Set();
+  medicamentosSeleccionados: number = 0;
+
+  get medicamentosFiltrados(): Medicamento[] {
+    return this._medicamentosFiltrados;
+  }
+
+  set medicamentosFiltrados(value: Medicamento[]) {
+    this._medicamentosFiltrados = value;
+  }
 
   constructor(private router: Router, private themeService: ThemeService) {
     this.currentTheme = this.themeService.getCurrentTheme();
@@ -41,6 +52,7 @@ export class Dashboard implements OnInit {
 
   ngOnInit() {
     this.cargarMedicamentos();
+    this.medicamentosFiltrados = [...this.medicamentos];
     this.calcularEstadisticas();
   }
 
@@ -59,8 +71,9 @@ export class Dashboard implements OnInit {
         unidad: 'tabletas',
         dosis: '500mg cada 6-8 horas',
         fechaVencimiento: tresMeses,
-        estado: 'vigente',
-        indicaciones: 'Para dolor y fiebre'
+        estado: 'vigente' as const,
+        indicaciones: 'Para dolor y fiebre',
+        selected: false
       },
       {
         id: 2,
@@ -69,8 +82,9 @@ export class Dashboard implements OnInit {
         unidad: 'cápsulas',
         dosis: '200mg cada 4-6 horas',
         fechaVencimiento: quinceDias,
-        estado: 'proximoVencer',
-        indicaciones: 'Antiinflamatorio'
+        estado: 'proximoVencer' as const,
+        indicaciones: 'Antiinflamatorio',
+        selected: false
       },
       {
         id: 3,
@@ -79,8 +93,9 @@ export class Dashboard implements OnInit {
         unidad: 'cápsulas',
         dosis: '500mg cada 8 horas',
         fechaVencimiento: mañana,
-        estado: 'caducado',
-        indicaciones: 'Antibiótico'
+        estado: 'caducado' as const,
+        indicaciones: 'Antibiótico',
+        selected: false
       },
       {
         id: 4,
@@ -89,8 +104,9 @@ export class Dashboard implements OnInit {
         unidad: 'tabletas',
         dosis: '1000mg diarios',
         fechaVencimiento: unAño,
-        estado: 'vigente',
-        indicaciones: 'Suplemento inmunológico'
+        estado: 'vigente' as const,
+        indicaciones: 'Suplemento inmunológico',
+        selected: false
       },
       {
         id: 5,
@@ -99,8 +115,9 @@ export class Dashboard implements OnInit {
         unidad: 'tabletas',
         dosis: '10mg una vez al día',
         fechaVencimiento: quinceDias,
-        estado: 'proximoVencer',
-        indicaciones: 'Antihistamínico'
+        estado: 'proximoVencer' as const,
+        indicaciones: 'Antihistamínico',
+        selected: false
       },
       {
         id: 6,
@@ -109,8 +126,9 @@ export class Dashboard implements OnInit {
         unidad: 'cápsulas',
         dosis: '20mg cada 12 horas',
         fechaVencimiento: new Date(hoy.getTime() - 30 * 24 * 60 * 60 * 1000),
-        estado: 'caducado',
-        indicaciones: 'Para acidez estomacal'
+        estado: 'caducado' as const,
+        indicaciones: 'Para acidez estomacal',
+        selected: false
       },
       {
         id: 7,
@@ -119,8 +137,9 @@ export class Dashboard implements OnInit {
         unidad: 'tabletas',
         dosis: '500mg dos veces al día',
         fechaVencimiento: unAño,
-        estado: 'vigente',
-        indicaciones: 'Para diabetes'
+        estado: 'vigente' as const,
+        indicaciones: 'Para diabetes',
+        selected: false
       },
       {
         id: 8,
@@ -129,8 +148,9 @@ export class Dashboard implements OnInit {
         unidad: 'tabletas',
         dosis: '500mg cada 6 horas',
         fechaVencimiento: tresMeses,
-        estado: 'vigente',
-        indicaciones: 'Analgésico'
+        estado: 'vigente' as const,
+        indicaciones: 'Analgésico',
+        selected: false
       },
       {
         id: 9,
@@ -139,12 +159,11 @@ export class Dashboard implements OnInit {
         unidad: 'tabletas',
         dosis: '800mg cada 12 horas',
         fechaVencimiento: unAño,
-        estado: 'vigente',
-        indicaciones: 'Antibiótico'
+        estado: 'vigente' as const,
+        indicaciones: 'Antibiótico',
+        selected: false
       }
     ];
-
-    this.medicamentosFiltrados = [...this.medicamentos];
   }
 
   calcularEstadisticas() {
@@ -163,6 +182,7 @@ export class Dashboard implements OnInit {
         med.indicaciones?.toLowerCase().includes(termino)
       );
     }
+    console.log('Filtrado aplicado. Mostrar:', this.medicamentosFiltrados.length);
   }
 
   agregarMedicamento() {
@@ -179,10 +199,82 @@ export class Dashboard implements OnInit {
     this.showUserMenu = !this.showUserMenu;
   }
 
+  toggleMedDropdown(medId: number) {
+    if (this.openMedDropdowns.has(medId)) {
+      this.openMedDropdowns.delete(medId);
+    } else {
+      this.openMedDropdowns.add(medId);
+    }
+  }
+
+  isMedDropdownOpen(medId: number): boolean {
+    return this.openMedDropdowns.has(medId);
+  }
+
+  closeMedDropdown(medId: number) {
+    this.openMedDropdowns.delete(medId);
+  }
+
+  editarMedicamento(medId: number) {
+    console.log('Editar medicamento', medId);
+    this.closeMedDropdown(medId);
+  }
+
+  eliminarMedicamento(medId: number) {
+    console.log('Eliminar medicamento', medId);
+    this.medicamentos = this.medicamentos.filter(m => m.id !== medId);
+    this.filtrarMedicamentos();
+    this.calcularEstadisticas();
+    this.closeMedDropdown(medId);
+  }
+
+  toggleSelectMedicamento(medId: number) {
+    const med = this.medicamentos.find(m => m.id === medId);
+    if (med) {
+      med.selected = !med.selected;
+      this.actualizarConteoSeleccionados();
+      this.closeMedDropdown(medId);
+    }
+  }
+
+  isMedicamentoSelected(medId: number): boolean {
+    const med = this.medicamentos.find(m => m.id === medId);
+    return med?.selected || false;
+  }
+
+  actualizarConteoSeleccionados() {
+    this.medicamentosSeleccionados = this.medicamentos.filter(m => m.selected).length;
+  }
+
+  deleteSelectedMedicamentos() {
+    this.medicamentos = this.medicamentos.filter(m => !m.selected);
+    this.medicamentosSeleccionados = 0;
+    this.filtrarMedicamentos();
+    this.calcularEstadisticas();
+  }
+
+  limpiarSeleccion() {
+    this.medicamentos.forEach(m => m.selected = false);
+    this.medicamentosSeleccionados = 0;
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     if (this.userDropdown && !this.userDropdown.nativeElement.contains(event.target)) {
       this.showUserMenu = false;
+    }
+    
+    const medActionsElements = document.querySelectorAll('.med-actions-container');
+    let clickedInsideMedActions = false;
+    
+    medActionsElements.forEach(element => {
+      if (element.contains(event.target as Node)) {
+        clickedInsideMedActions = true;
+      }
+    });
+    
+    if (!clickedInsideMedActions) {
+      this.openMedDropdowns.clear();
     }
   }
 

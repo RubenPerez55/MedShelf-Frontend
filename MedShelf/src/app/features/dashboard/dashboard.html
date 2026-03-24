@@ -84,34 +84,71 @@
 
         <!-- Medications List -->
         <section class="medications-section">
-            <div class="medications-list">
-                <div *ngFor="let med of medicamentosFiltrados" class="medication-card" [ngClass]="'status-' + med.estado">
-                    <div class="med-header">
-                        <h3>{{ med.nombre }}</h3>
-                        <span class="med-status">{{ med.estado }}</span>
+            @if (medicamentosSeleccionados > 0) {
+                <div class="selection-bar">
+                    <div class="selection-info">
+                        <span>{{ medicamentosSeleccionados }} {{ medicamentosSeleccionados === 1 ? 'medicamento' : 'medicamentos' }} seleccionado(s)</span>
                     </div>
-                    
-                    <div class="med-details">
-                        <div class="med-info">
-                            <p><strong>Cantidad:</strong> {{ med.cantidad }} {{ med.unidad }}</p>
-                            <p><strong>Dosis:</strong> {{ med.dosis }}</p>
-                        </div>
-                        
-                        <div class="med-expiry">
-                            <p><strong>Vencimiento:</strong></p>
-                            <p class="expiry-date">{{ med.fechaVencimiento | date:'dd/MM/yyyy' }}</p>
-                        </div>
-                    </div>
-
-                    <div class="med-actions">
-                        <button class="btn-action">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
-                        </button>
-                        <button class="btn-action btn-delete">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-icon lucide-trash"><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                        </button>
+                    <div class="selection-actions">
+                        <button class="btn-clear-selection" (click)="limpiarSeleccion()">Desseleccionar</button>
+                        <button class="btn-delete-selected" (click)="deleteSelectedMedicamentos()">Eliminar Seleccionados</button>
                     </div>
                 </div>
+            }
+            <div class="medications-list">
+                @for (med of medicamentosFiltrados; track med.id) {
+                    <div class="medication-card" 
+                         [ngClass]="'status-' + med.estado" 
+                         [class.selected]="isMedicamentoSelected(med.id)"
+                         (click)="medicamentosSeleccionados > 0 && toggleSelectMedicamento(med.id)"
+                         [style.cursor]="medicamentosSeleccionados > 0 ? 'pointer' : 'default'">
+                        <div class="med-header">
+                            @if (isMedicamentoSelected(med.id)) {
+                                <div class="med-checkbox">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-icon lucide-circle-check"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                                </div>
+                            }
+                            <div class="med-title-section">
+                                <h3>{{ med.nombre }}</h3>
+                                <span class="med-status">{{ med.estado }}</span>
+                            </div>
+
+                            <!-- Menú Hamburguesa -->
+                            <div class="med-actions-container">
+                                <button class="btn-med-menu" (click)="toggleMedDropdown(med.id); $event.stopPropagation()" title="Opciones">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-more-vertical"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                                </button>
+                                
+                                <div class="med-dropdown" [class.active]="isMedDropdownOpen(med.id)">
+                                    <button class="med-dropdown-item" (click)="toggleSelectMedicamento(med.id); $event.stopPropagation()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-square"><polyline points="21 10 11 20 7 16"/><path d="M7 10H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5"/></svg>
+                                        <span>{{ isMedicamentoSelected(med.id) ? 'Deseleccionar' : 'Seleccionar' }}</span>
+                                    </button>
+                                    <button class="med-dropdown-item" (click)="editarMedicamento(med.id); $event.stopPropagation()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+                                        <span>Editar</span>
+                                    </button>
+                                    <button class="med-dropdown-item med-dropdown-delete" (click)="eliminarMedicamento(med.id); $event.stopPropagation()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-icon lucide-trash"><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                        <span>Eliminar</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="med-details">
+                            <div class="med-info">
+                                <p><strong>Cantidad:</strong> {{ med.cantidad }} {{ med.unidad }}</p>
+                                <p><strong>Dosis:</strong> {{ med.dosis }}</p>
+                            </div>
+                            
+                            <div class="med-expiry">
+                                <p><strong>Vencimiento:</strong></p>
+                                <p class="expiry-date">{{ med.fechaVencimiento | date:'dd/MM/yyyy' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                }
 
                 @if (medicamentosFiltrados.length === 0 ) {
                     <div class="no-results">

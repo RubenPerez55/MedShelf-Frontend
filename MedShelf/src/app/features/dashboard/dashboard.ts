@@ -37,6 +37,7 @@ export class Dashboard implements OnInit {
   currentTheme: Theme = 'light';
   openMedDropdowns: Set<number> = new Set();
   medicamentosSeleccionados: number = 0;
+  private readonly LOCAL_STORAGE_KEY = 'medshelf_medicamentos';
 
   get medicamentosFiltrados(): Medicamento[] {
     return this._medicamentosFiltrados;
@@ -57,6 +58,25 @@ export class Dashboard implements OnInit {
   }
 
   cargarMedicamentos() {
+    // Intentar cargar desde localStorage
+    const datosGuardados = localStorage.getItem(this.LOCAL_STORAGE_KEY);
+    
+    if (datosGuardados) {
+      try {
+        const medicamentosGuardados = JSON.parse(datosGuardados);
+        // Convertir strings de fechas nuevamente a Date
+        this.medicamentos = medicamentosGuardados.map((med: any) => ({
+          ...med,
+          fechaVencimiento: new Date(med.fechaVencimiento)
+        }));
+        console.log('Medicamentos cargados desde localStorage:', this.medicamentos.length);
+        return;
+      } catch (e) {
+        console.error('Error al cargar medicamentos desde localStorage:', e);
+      }
+    }
+
+    // Si no hay datos en localStorage o hubo error, cargar datos por defecto
     const hoy = new Date();
     const mañana = new Date(hoy.getTime() + 24 * 60 * 60 * 1000);
     const quinceDias = new Date(hoy.getTime() + 15 * 24 * 60 * 60 * 1000);
@@ -164,6 +184,18 @@ export class Dashboard implements OnInit {
         selected: false
       }
     ];
+
+    // Guardar datos por defecto en localStorage
+    this.guardarMedicamentosEnLocalStorage();
+  }
+
+  private guardarMedicamentosEnLocalStorage() {
+    try {
+      localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(this.medicamentos));
+      console.log('Medicamentos guardados en localStorage');
+    } catch (e) {
+      console.error('Error al guardar medicamentos en localStorage:', e);
+    }
   }
 
   calcularEstadisticas() {
@@ -223,6 +255,7 @@ export class Dashboard implements OnInit {
   eliminarMedicamento(medId: number) {
     console.log('Eliminar medicamento', medId);
     this.medicamentos = this.medicamentos.filter(m => m.id !== medId);
+    this.guardarMedicamentosEnLocalStorage();
     this.filtrarMedicamentos();
     this.calcularEstadisticas();
     this.closeMedDropdown(medId);
@@ -249,6 +282,7 @@ export class Dashboard implements OnInit {
   deleteSelectedMedicamentos() {
     this.medicamentos = this.medicamentos.filter(m => !m.selected);
     this.medicamentosSeleccionados = 0;
+    this.guardarMedicamentosEnLocalStorage();
     this.filtrarMedicamentos();
     this.calcularEstadisticas();
   }
@@ -256,6 +290,39 @@ export class Dashboard implements OnInit {
   limpiarSeleccion() {
     this.medicamentos.forEach(m => m.selected = false);
     this.medicamentosSeleccionados = 0;
+  }
+
+  actualizarMedicamento(medicamentoActualizado: Medicamento) {
+    const indice = this.medicamentos.findIndex(m => m.id === medicamentoActualizado.id);
+    if (indice !== -1) {
+      this.medicamentos[indice] = medicamentoActualizado;
+      this.guardarMedicamentosEnLocalStorage();
+      this.filtrarMedicamentos();
+      this.calcularEstadisticas();
+      console.log('Medicamento actualizado:', medicamentoActualizado.nombre);
+    }
+  }
+
+  agregarMedicamentoNew({nombre, cantidad, unidad, dosis, fechaVencimiento, estado, indicaciones}: 
+    {nombre: string, cantidad: number, unidad: string, dosis: string, fechaVencimiento: Date, 
+     estado: 'vigente' | 'proximoVencer' | 'caducado', indicaciones: string}) {
+    const nuevoId = Math.max(...this.medicamentos.map(m => m.id), 0) + 1;
+    const nuevoMedicamento: Medicamento = {
+      id: nuevoId,
+      nombre,
+      cantidad,
+      unidad,
+      dosis,
+      fechaVencimiento,
+      estado,
+      indicaciones,
+      selected: false
+    };
+    this.medicamentos.push(nuevoMedicamento);
+    this.guardarMedicamentosEnLocalStorage();
+    this.filtrarMedicamentos();
+    this.calcularEstadisticas();
+    console.log('Nuevo medicamento agregado:', nombre);
   }
 
   @HostListener('document:click', ['$event'])

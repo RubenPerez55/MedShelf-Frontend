@@ -547,12 +547,11 @@ main {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--brand-color);
     border: none;
-    color: white;
+    color: var(--secondary-contrast);
     font-size: 2rem;
     cursor: pointer;
-    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
@@ -562,7 +561,6 @@ main {
 
 .fab:hover {
     transform: scale(1.1) translateY(-3px);
-    box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
 }
 
 .fab:active {

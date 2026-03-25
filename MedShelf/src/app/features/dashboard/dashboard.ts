@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,6 +13,7 @@ interface Medicamento {
   fechaVencimiento: Date;
   estado: 'vigente' | 'proximoVencer' | 'caducado';
   indicaciones?: string;
+  selected?: boolean;
 }
 
 @Component({
@@ -22,8 +23,10 @@ interface Medicamento {
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit {
+  @ViewChild('userDropdown') userDropdown!: ElementRef;
+  
   medicamentos: Medicamento[] = [];
-  medicamentosFiltrados: Medicamento[] = [];
+  private _medicamentosFiltrados: Medicamento[] = [];
   searchTerm: string = '';
 
   caducados: number = 0;
@@ -32,6 +35,17 @@ export class Dashboard implements OnInit {
 
   showUserMenu: boolean = false;
   currentTheme: Theme = 'light';
+  openMedDropdowns: Set<number> = new Set();
+  medicamentosSeleccionados: number = 0;
+  private readonly LOCAL_STORAGE_KEY = 'medshelf_medicamentos';
+
+  get medicamentosFiltrados(): Medicamento[] {
+    return this._medicamentosFiltrados;
+  }
+
+  set medicamentosFiltrados(value: Medicamento[]) {
+    this._medicamentosFiltrados = value;
+  }
 
   constructor(private router: Router, private themeService: ThemeService) {
     this.currentTheme = this.themeService.getCurrentTheme();
@@ -39,10 +53,30 @@ export class Dashboard implements OnInit {
 
   ngOnInit() {
     this.cargarMedicamentos();
+    this.medicamentosFiltrados = [...this.medicamentos];
     this.calcularEstadisticas();
   }
 
   cargarMedicamentos() {
+    // Intentar cargar desde localStorage
+    const datosGuardados = localStorage.getItem(this.LOCAL_STORAGE_KEY);
+    
+    if (datosGuardados) {
+      try {
+        const medicamentosGuardados = JSON.parse(datosGuardados);
+        // Convertir strings de fechas nuevamente a Date
+        this.medicamentos = medicamentosGuardados.map((med: any) => ({
+          ...med,
+          fechaVencimiento: new Date(med.fechaVencimiento)
+        }));
+        console.log('Medicamentos cargados desde localStorage:', this.medicamentos.length);
+        return;
+      } catch (e) {
+        console.error('Error al cargar medicamentos desde localStorage:', e);
+      }
+    }
+
+    // Si no hay datos en localStorage o hubo error, cargar datos por defecto
     const hoy = new Date();
     const mañana = new Date(hoy.getTime() + 24 * 60 * 60 * 1000);
     const quinceDias = new Date(hoy.getTime() + 15 * 24 * 60 * 60 * 1000);
@@ -57,8 +91,9 @@ export class Dashboard implements OnInit {
         unidad: 'tabletas',
         dosis: '500mg cada 6-8 horas',
         fechaVencimiento: tresMeses,
-        estado: 'vigente',
-        indicaciones: 'Para dolor y fiebre'
+        estado: 'vigente' as const,
+        indicaciones: 'Para dolor y fiebre',
+        selected: false
       },
       {
         id: 2,
@@ -67,8 +102,9 @@ export class Dashboard implements OnInit {
         unidad: 'cápsulas',
         dosis: '200mg cada 4-6 horas',
         fechaVencimiento: quinceDias,
-        estado: 'proximoVencer',
-        indicaciones: 'Antiinflamatorio'
+        estado: 'proximoVencer' as const,
+        indicaciones: 'Antiinflamatorio',
+        selected: false
       },
       {
         id: 3,
@@ -77,8 +113,9 @@ export class Dashboard implements OnInit {
         unidad: 'cápsulas',
         dosis: '500mg cada 8 horas',
         fechaVencimiento: mañana,
-        estado: 'caducado',
-        indicaciones: 'Antibiótico'
+        estado: 'caducado' as const,
+        indicaciones: 'Antibiótico',
+        selected: false
       },
       {
         id: 4,
@@ -87,8 +124,9 @@ export class Dashboard implements OnInit {
         unidad: 'tabletas',
         dosis: '1000mg diarios',
         fechaVencimiento: unAño,
-        estado: 'vigente',
-        indicaciones: 'Suplemento inmunológico'
+        estado: 'vigente' as const,
+        indicaciones: 'Suplemento inmunológico',
+        selected: false
       },
       {
         id: 5,
@@ -97,8 +135,9 @@ export class Dashboard implements OnInit {
         unidad: 'tabletas',
         dosis: '10mg una vez al día',
         fechaVencimiento: quinceDias,
-        estado: 'proximoVencer',
-        indicaciones: 'Antihistamínico'
+        estado: 'proximoVencer' as const,
+        indicaciones: 'Antihistamínico',
+        selected: false
       },
       {
         id: 6,
@@ -107,8 +146,9 @@ export class Dashboard implements OnInit {
         unidad: 'cápsulas',
         dosis: '20mg cada 12 horas',
         fechaVencimiento: new Date(hoy.getTime() - 30 * 24 * 60 * 60 * 1000),
-        estado: 'caducado',
-        indicaciones: 'Para acidez estomacal'
+        estado: 'caducado' as const,
+        indicaciones: 'Para acidez estomacal',
+        selected: false
       },
       {
         id: 7,
@@ -117,8 +157,9 @@ export class Dashboard implements OnInit {
         unidad: 'tabletas',
         dosis: '500mg dos veces al día',
         fechaVencimiento: unAño,
-        estado: 'vigente',
-        indicaciones: 'Para diabetes'
+        estado: 'vigente' as const,
+        indicaciones: 'Para diabetes',
+        selected: false
       },
       {
         id: 8,
@@ -127,8 +168,9 @@ export class Dashboard implements OnInit {
         unidad: 'tabletas',
         dosis: '500mg cada 6 horas',
         fechaVencimiento: tresMeses,
-        estado: 'vigente',
-        indicaciones: 'Analgésico'
+        estado: 'vigente' as const,
+        indicaciones: 'Analgésico',
+        selected: false
       },
       {
         id: 9,
@@ -137,12 +179,23 @@ export class Dashboard implements OnInit {
         unidad: 'tabletas',
         dosis: '800mg cada 12 horas',
         fechaVencimiento: unAño,
-        estado: 'vigente',
-        indicaciones: 'Antibiótico'
+        estado: 'vigente' as const,
+        indicaciones: 'Antibiótico',
+        selected: false
       }
     ];
 
-    this.medicamentosFiltrados = [...this.medicamentos];
+    // Guardar datos por defecto en localStorage
+    this.guardarMedicamentosEnLocalStorage();
+  }
+
+  private guardarMedicamentosEnLocalStorage() {
+    try {
+      localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(this.medicamentos));
+      console.log('Medicamentos guardados en localStorage');
+    } catch (e) {
+      console.error('Error al guardar medicamentos en localStorage:', e);
+    }
   }
 
   calcularEstadisticas() {
@@ -161,6 +214,7 @@ export class Dashboard implements OnInit {
         med.indicaciones?.toLowerCase().includes(termino)
       );
     }
+    console.log('Filtrado aplicado. Mostrar:', this.medicamentosFiltrados.length);
   }
 
   agregarMedicamento() {
@@ -175,6 +229,120 @@ export class Dashboard implements OnInit {
 
   toggleUserMenu() {
     this.showUserMenu = !this.showUserMenu;
+  }
+
+  toggleMedDropdown(medId: number) {
+    if (this.openMedDropdowns.has(medId)) {
+      this.openMedDropdowns.delete(medId);
+    } else {
+      this.openMedDropdowns.add(medId);
+    }
+  }
+
+  isMedDropdownOpen(medId: number): boolean {
+    return this.openMedDropdowns.has(medId);
+  }
+
+  closeMedDropdown(medId: number) {
+    this.openMedDropdowns.delete(medId);
+  }
+
+  editarMedicamento(medId: number) {
+    console.log('Editar medicamento', medId);
+    this.closeMedDropdown(medId);
+  }
+
+  eliminarMedicamento(medId: number) {
+    console.log('Eliminar medicamento', medId);
+    this.medicamentos = this.medicamentos.filter(m => m.id !== medId);
+    this.guardarMedicamentosEnLocalStorage();
+    this.filtrarMedicamentos();
+    this.calcularEstadisticas();
+    this.closeMedDropdown(medId);
+  }
+
+  toggleSelectMedicamento(medId: number) {
+    const med = this.medicamentos.find(m => m.id === medId);
+    if (med) {
+      med.selected = !med.selected;
+      this.actualizarConteoSeleccionados();
+      this.closeMedDropdown(medId);
+    }
+  }
+
+  isMedicamentoSelected(medId: number): boolean {
+    const med = this.medicamentos.find(m => m.id === medId);
+    return med?.selected || false;
+  }
+
+  actualizarConteoSeleccionados() {
+    this.medicamentosSeleccionados = this.medicamentos.filter(m => m.selected).length;
+  }
+
+  deleteSelectedMedicamentos() {
+    this.medicamentos = this.medicamentos.filter(m => !m.selected);
+    this.medicamentosSeleccionados = 0;
+    this.guardarMedicamentosEnLocalStorage();
+    this.filtrarMedicamentos();
+    this.calcularEstadisticas();
+  }
+
+  limpiarSeleccion() {
+    this.medicamentos.forEach(m => m.selected = false);
+    this.medicamentosSeleccionados = 0;
+  }
+
+  actualizarMedicamento(medicamentoActualizado: Medicamento) {
+    const indice = this.medicamentos.findIndex(m => m.id === medicamentoActualizado.id);
+    if (indice !== -1) {
+      this.medicamentos[indice] = medicamentoActualizado;
+      this.guardarMedicamentosEnLocalStorage();
+      this.filtrarMedicamentos();
+      this.calcularEstadisticas();
+      console.log('Medicamento actualizado:', medicamentoActualizado.nombre);
+    }
+  }
+
+  agregarMedicamentoNew({nombre, cantidad, unidad, dosis, fechaVencimiento, estado, indicaciones}: 
+    {nombre: string, cantidad: number, unidad: string, dosis: string, fechaVencimiento: Date, 
+     estado: 'vigente' | 'proximoVencer' | 'caducado', indicaciones: string}) {
+    const nuevoId = Math.max(...this.medicamentos.map(m => m.id), 0) + 1;
+    const nuevoMedicamento: Medicamento = {
+      id: nuevoId,
+      nombre,
+      cantidad,
+      unidad,
+      dosis,
+      fechaVencimiento,
+      estado,
+      indicaciones,
+      selected: false
+    };
+    this.medicamentos.push(nuevoMedicamento);
+    this.guardarMedicamentosEnLocalStorage();
+    this.filtrarMedicamentos();
+    this.calcularEstadisticas();
+    console.log('Nuevo medicamento agregado:', nombre);
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (this.userDropdown && !this.userDropdown.nativeElement.contains(event.target)) {
+      this.showUserMenu = false;
+    }
+    
+    const medActionsElements = document.querySelectorAll('.med-actions-container');
+    let clickedInsideMedActions = false;
+    
+    medActionsElements.forEach(element => {
+      if (element.contains(event.target as Node)) {
+        clickedInsideMedActions = true;
+      }
+    });
+    
+    if (!clickedInsideMedActions) {
+      this.openMedDropdowns.clear();
+    }
   }
 
   cerrarSesion() {

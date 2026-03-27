@@ -182,6 +182,17 @@ export class Dashboard implements OnInit {
         estado: 'vigente' as const,
         indicaciones: 'Antibiótico',
         selected: false
+      },
+      {
+        id: 10,
+        nombre: 'Paracetamola 500mg',
+        cantidad: 20,
+        unidad: 'tabletas',
+        dosis: '500mg cada 6-8 horas',
+        fechaVencimiento: tresMeses,
+        estado: 'vigente' as const,
+        indicaciones: 'Para dolor y fiebre',
+        selected: false
       }
     ];
 

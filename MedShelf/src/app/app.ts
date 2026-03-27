@@ -1,13 +1,13 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet, RouterLinkWithHref } from '@angular/router';
-import { Home } from "./core/home/home";
+import { Home } from './features/home/home';
 import { ThemeService } from './shared/services/theme.service';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, Home, RouterLinkWithHref],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App {
   protected readonly title = signal('MedShelf');

@@ -1,0 +1,83 @@
+.treatment-container {
+  padding: 16px;
+}
+
+/* Header */
+.header {
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.header p {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Lista */
+.treatment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Card */
+.treatment-card {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Hora */
+.left {
+  width: 60px;
+  text-align: center;
+}
+
+.time {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Info */
+.center {
+  flex: 1;
+  padding: 0 10px;
+}
+
+.center h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.center p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Botón */
+.right {
+  display: flex;
+  align-items: center;
+}
+
+.take-btn {
+  border: none;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: #22c55e;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.take-btn.pending {
+  background: #f59e0b;
+}

@@ -1,0 +1,110 @@
+.profile-container {
+  padding: 20px;
+  text-align: center;
+}
+
+/* Perfil principal */
+.main-profile {
+  margin-top: 30px;
+  margin-bottom: 40px;
+}
+
+.avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0 auto;
+}
+
+.avatar.small {
+  width: 60px;
+  height: 60px;
+  font-size: 16px;
+}
+
+/* Lista de perfiles */
+.profiles-section {
+  text-align: left;
+}
+
+.profiles-section h3 {
+  margin-bottom: 15px;
+  font-size: 16px;
+  color: #374151;
+}
+
+.profiles-list {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+}
+
+/* Card de perfil */
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+  cursor: pointer;
+}
+
+.profile-card p {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+/* Botón añadir */
+.profile-card.add .add-btn {
+  background: #2563eb;
+  color: white;
+  font-size: 24px;
+}
+
+.info-section {
+  margin-top: 20px;
+}
+
+.info-section h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #374151;
+}
+
+/* Card */
+.info-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Item */
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+/* Texto */
+.label {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.value {
+  font-weight: 500;
+  font-size: 14px;
+  color: #111827;
+}

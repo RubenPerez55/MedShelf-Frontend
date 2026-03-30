@@ -16,6 +16,18 @@ main {
   transition: background-color 0.3s ease;
 }
 
+.stat-icon-thumbs-up {
+  color: #4caf50;
+}
+
+.stat-icon-clock {
+  color: #ffc107;
+}
+
+.stat-icon-alert {
+  color: #dc3545;
+}
+
 /* Dashboard Navbar */
 .dashboard-navbar {
   display: flex;
@@ -570,6 +582,13 @@ main {
   align-items: center;
   justify-content: center;
   z-index: 50;
+}
+
+.fab-icon {
+  color: var(--secondary-contrast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .fab:hover {

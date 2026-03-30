@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ThemeService, type Theme } from '../../shared/services/theme.service';
+import { Clock4, LucideAngularModule, Plus, ThumbsUp, TriangleAlert } from 'lucide-angular';
 
 interface Medicamento {
   id: number;
@@ -18,12 +19,19 @@ interface Medicamento {
 
 @Component({
   selector: 'app-medkit',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule],
   templateUrl: './medkit.html',
   styleUrl: './medkit.css',
 })
 export class Medkit implements OnInit {
   @ViewChild('userDropdown') userDropdown!: ElementRef;
+
+  icons = {
+    thumbsUp: ThumbsUp,
+    clock: Clock4,
+    alert: TriangleAlert,
+    plus: Plus,
+  };
 
   medicamentos: Medicamento[] = [];
   private _medicamentosFiltrados: Medicamento[] = [];

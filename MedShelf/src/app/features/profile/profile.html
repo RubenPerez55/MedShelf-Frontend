@@ -1,67 +1,91 @@
 <div class="profile-container">
-  <!-- Foto principal -->
+  <!-- Perfil principal -->
   <div class="main-profile">
-    <div class="avatar">
-      <span>AB</span>
+    <div class="avatar-wrapper">
+      <div class="avatar">
+        <span>AB</span>
+      </div>
     </div>
-    <h2>Alberto</h2>
+    <h2 class="profile-name">Alberto</h2>
+    <p class="profile-sub">Administrador</p>
+    <div class="profile-badges">
+      <span class="badge badge-blue">O+</span>
+      <span class="badge badge-red">Alérgico: Penicilina</span>
+    </div>
   </div>
 
-  <div class="info-section">
-    <h3>Información</h3>
+  <!-- Stats rápidos -->
+  <div class="stats-row">
+    <div class="stat-item">
+      <span class="stat-num">3</span>
+      <span class="stat-label">Medicamentos</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-num">89%</span>
+      <span class="stat-label">Adherencia</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-num">12</span>
+      <span class="stat-label">Días racha</span>
+    </div>
+  </div>
 
+  <!-- Información -->
+  <div class="info-section">
+    <p class="titulo-seccion">INFORMACIÓN</p>
     <div class="info-card">
       <div class="info-item">
         <span class="label">Nombre</span>
-        <span class="value">Alberto Barrera</span>
+        <span class="value">{{ profile.name }}</span>
       </div>
-
       <div class="info-item">
         <span class="label">Edad</span>
-        <span class="value">21 años</span>
+        <span class="value">{{ profile.age }} años</span>
       </div>
-
       <div class="info-item">
         <span class="label">Tipo de sangre</span>
-        <span class="value">O+</span>
+        <span class="value blood">{{ profile.bloodtype }}</span>
       </div>
-
       <div class="info-item">
         <span class="label">Alergias</span>
-        <span class="value">Ninguna</span>
+        <span class="value allergy">{{ profile.alergies.join(', ') }}</span>
       </div>
-
       <div class="info-item">
         <span class="label">Contacto</span>
-        <span class="value">999 123 4567</span>
+        <span class="value">{{ profile.phone }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Correo</span>
+        <span class="value">{{ profile.email }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Dirección</span>
+        <span class="value">{{ profile.address }}</span>
       </div>
     </div>
   </div>
 
   <!-- Otros perfiles -->
   <div class="profiles-section">
-    <h3>Otros perfiles</h3>
-
+    <p class="titulo-seccion">FAMILIA</p>
     <div class="profiles-list">
-      <div class="profile-card">
-        <div class="avatar small">
-          <span>MG</span>
+      @for (profile of familyProfiles; track profile.id) {
+        <div class="profile-card">
+          <div class="avatar small">
+            <span>{{ profile.initials }}</span>
+          </div>
+          <p>{{ profile.relation }}</p>
         </div>
-        <p>Mamá</p>
-      </div>
-
+      }
       <div class="profile-card">
-        <div class="avatar small">
-          <span>JP</span>
-        </div>
-        <p>Papá</p>
-      </div>
-
-      <!-- Botón añadir -->
-      <div class="profile-card add">
         <div class="avatar small add-btn">+</div>
         <p>Añadir</p>
       </div>
     </div>
   </div>
+
+  <!-- Botón editar -->
+  <button class="btn-editar">Editar perfil</button>
 </div>

@@ -1,8 +1,9 @@
 import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ThemeService, type Theme } from '../../shared/services/theme.service';
+import { Clock4, LucideAngularModule, Plus, ThumbsUp, TriangleAlert } from 'lucide-angular';
 
 interface Medicamento {
   id: number;
@@ -17,14 +18,21 @@ interface Medicamento {
 }
 
 @Component({
-  selector: 'app-dashboard',
-  imports: [CommonModule, FormsModule],
-  templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css',
+  selector: 'app-medkit',
+  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule],
+  templateUrl: './medkit.html',
+  styleUrl: './medkit.css',
 })
-export class Dashboard implements OnInit {
+export class Medkit implements OnInit {
   @ViewChild('userDropdown') userDropdown!: ElementRef;
-  
+
+  icons = {
+    thumbsUp: ThumbsUp,
+    clock: Clock4,
+    alert: TriangleAlert,
+    plus: Plus,
+  };
+
   medicamentos: Medicamento[] = [];
   private _medicamentosFiltrados: Medicamento[] = [];
   searchTerm: string = '';
@@ -47,7 +55,10 @@ export class Dashboard implements OnInit {
     this._medicamentosFiltrados = value;
   }
 
-  constructor(private router: Router, private themeService: ThemeService) {
+  constructor(
+    private router: Router,
+    private themeService: ThemeService,
+  ) {
     this.currentTheme = this.themeService.getCurrentTheme();
   }
 
@@ -60,14 +71,14 @@ export class Dashboard implements OnInit {
   cargarMedicamentos() {
     // Intentar cargar desde localStorage
     const datosGuardados = localStorage.getItem(this.LOCAL_STORAGE_KEY);
-    
+
     if (datosGuardados) {
       try {
         const medicamentosGuardados = JSON.parse(datosGuardados);
         // Convertir strings de fechas nuevamente a Date
         this.medicamentos = medicamentosGuardados.map((med: any) => ({
           ...med,
-          fechaVencimiento: new Date(med.fechaVencimiento)
+          fechaVencimiento: new Date(med.fechaVencimiento),
         }));
         console.log('Medicamentos cargados desde localStorage:', this.medicamentos.length);
         return;
@@ -93,7 +104,7 @@ export class Dashboard implements OnInit {
         fechaVencimiento: tresMeses,
         estado: 'vigente' as const,
         indicaciones: 'Para dolor y fiebre',
-        selected: false
+        selected: false,
       },
       {
         id: 2,
@@ -104,7 +115,7 @@ export class Dashboard implements OnInit {
         fechaVencimiento: quinceDias,
         estado: 'proximoVencer' as const,
         indicaciones: 'Antiinflamatorio',
-        selected: false
+        selected: false,
       },
       {
         id: 3,
@@ -115,7 +126,7 @@ export class Dashboard implements OnInit {
         fechaVencimiento: mañana,
         estado: 'caducado' as const,
         indicaciones: 'Antibiótico',
-        selected: false
+        selected: false,
       },
       {
         id: 4,
@@ -126,7 +137,7 @@ export class Dashboard implements OnInit {
         fechaVencimiento: unAño,
         estado: 'vigente' as const,
         indicaciones: 'Suplemento inmunológico',
-        selected: false
+        selected: false,
       },
       {
         id: 5,
@@ -137,7 +148,7 @@ export class Dashboard implements OnInit {
         fechaVencimiento: quinceDias,
         estado: 'proximoVencer' as const,
         indicaciones: 'Antihistamínico',
-        selected: false
+        selected: false,
       },
       {
         id: 6,
@@ -148,7 +159,7 @@ export class Dashboard implements OnInit {
         fechaVencimiento: new Date(hoy.getTime() - 30 * 24 * 60 * 60 * 1000),
         estado: 'caducado' as const,
         indicaciones: 'Para acidez estomacal',
-        selected: false
+        selected: false,
       },
       {
         id: 7,
@@ -159,7 +170,7 @@ export class Dashboard implements OnInit {
         fechaVencimiento: unAño,
         estado: 'vigente' as const,
         indicaciones: 'Para diabetes',
-        selected: false
+        selected: false,
       },
       {
         id: 8,
@@ -170,7 +181,7 @@ export class Dashboard implements OnInit {
         fechaVencimiento: tresMeses,
         estado: 'vigente' as const,
         indicaciones: 'Analgésico',
-        selected: false
+        selected: false,
       },
       {
         id: 9,
@@ -181,7 +192,7 @@ export class Dashboard implements OnInit {
         fechaVencimiento: unAño,
         estado: 'vigente' as const,
         indicaciones: 'Antibiótico',
-        selected: false
+        selected: false,
       },
       {
         id: 10,
@@ -192,8 +203,8 @@ export class Dashboard implements OnInit {
         fechaVencimiento: tresMeses,
         estado: 'vigente' as const,
         indicaciones: 'Para dolor y fiebre',
-        selected: false
-      }
+        selected: false,
+      },
     ];
 
     // Guardar datos por defecto en localStorage
@@ -210,9 +221,9 @@ export class Dashboard implements OnInit {
   }
 
   calcularEstadisticas() {
-    this.caducados = this.medicamentos.filter(m => m.estado === 'caducado').length;
-    this.proximosVencer = this.medicamentos.filter(m => m.estado === 'proximoVencer').length;
-    this.vigentes = this.medicamentos.filter(m => m.estado === 'vigente').length;
+    this.caducados = this.medicamentos.filter((m) => m.estado === 'caducado').length;
+    this.proximosVencer = this.medicamentos.filter((m) => m.estado === 'proximoVencer').length;
+    this.vigentes = this.medicamentos.filter((m) => m.estado === 'vigente').length;
   }
 
   filtrarMedicamentos() {
@@ -220,18 +231,16 @@ export class Dashboard implements OnInit {
       this.medicamentosFiltrados = [...this.medicamentos];
     } else {
       const termino = this.searchTerm.toLowerCase();
-      this.medicamentosFiltrados = this.medicamentos.filter(med =>
-        med.nombre.toLowerCase().includes(termino) ||
-        med.indicaciones?.toLowerCase().includes(termino)
+      this.medicamentosFiltrados = this.medicamentos.filter(
+        (med) =>
+          med.nombre.toLowerCase().includes(termino) ||
+          med.indicaciones?.toLowerCase().includes(termino),
       );
     }
     console.log('Filtrado aplicado. Mostrar:', this.medicamentosFiltrados.length);
   }
 
-  agregarMedicamento() {
-    console.log('Abrir modal para agregar medicamento');
-    // Aquí irá la navegación o modal para agregar
-  }
+  agregarMedicamento() {}
 
   toggleTheme() {
     this.themeService.toggleTheme();
@@ -265,7 +274,7 @@ export class Dashboard implements OnInit {
 
   eliminarMedicamento(medId: number) {
     console.log('Eliminar medicamento', medId);
-    this.medicamentos = this.medicamentos.filter(m => m.id !== medId);
+    this.medicamentos = this.medicamentos.filter((m) => m.id !== medId);
     this.guardarMedicamentosEnLocalStorage();
     this.filtrarMedicamentos();
     this.calcularEstadisticas();
@@ -273,7 +282,7 @@ export class Dashboard implements OnInit {
   }
 
   toggleSelectMedicamento(medId: number) {
-    const med = this.medicamentos.find(m => m.id === medId);
+    const med = this.medicamentos.find((m) => m.id === medId);
     if (med) {
       med.selected = !med.selected;
       this.actualizarConteoSeleccionados();
@@ -282,16 +291,16 @@ export class Dashboard implements OnInit {
   }
 
   isMedicamentoSelected(medId: number): boolean {
-    const med = this.medicamentos.find(m => m.id === medId);
+    const med = this.medicamentos.find((m) => m.id === medId);
     return med?.selected || false;
   }
 
   actualizarConteoSeleccionados() {
-    this.medicamentosSeleccionados = this.medicamentos.filter(m => m.selected).length;
+    this.medicamentosSeleccionados = this.medicamentos.filter((m) => m.selected).length;
   }
 
   deleteSelectedMedicamentos() {
-    this.medicamentos = this.medicamentos.filter(m => !m.selected);
+    this.medicamentos = this.medicamentos.filter((m) => !m.selected);
     this.medicamentosSeleccionados = 0;
     this.guardarMedicamentosEnLocalStorage();
     this.filtrarMedicamentos();
@@ -299,12 +308,12 @@ export class Dashboard implements OnInit {
   }
 
   limpiarSeleccion() {
-    this.medicamentos.forEach(m => m.selected = false);
+    this.medicamentos.forEach((m) => (m.selected = false));
     this.medicamentosSeleccionados = 0;
   }
 
   actualizarMedicamento(medicamentoActualizado: Medicamento) {
-    const indice = this.medicamentos.findIndex(m => m.id === medicamentoActualizado.id);
+    const indice = this.medicamentos.findIndex((m) => m.id === medicamentoActualizado.id);
     if (indice !== -1) {
       this.medicamentos[indice] = medicamentoActualizado;
       this.guardarMedicamentosEnLocalStorage();
@@ -314,10 +323,24 @@ export class Dashboard implements OnInit {
     }
   }
 
-  agregarMedicamentoNew({nombre, cantidad, unidad, dosis, fechaVencimiento, estado, indicaciones}: 
-    {nombre: string, cantidad: number, unidad: string, dosis: string, fechaVencimiento: Date, 
-     estado: 'vigente' | 'proximoVencer' | 'caducado', indicaciones: string}) {
-    const nuevoId = Math.max(...this.medicamentos.map(m => m.id), 0) + 1;
+  agregarMedicamentoNew({
+    nombre,
+    cantidad,
+    unidad,
+    dosis,
+    fechaVencimiento,
+    estado,
+    indicaciones,
+  }: {
+    nombre: string;
+    cantidad: number;
+    unidad: string;
+    dosis: string;
+    fechaVencimiento: Date;
+    estado: 'vigente' | 'proximoVencer' | 'caducado';
+    indicaciones: string;
+  }) {
+    const nuevoId = Math.max(...this.medicamentos.map((m) => m.id), 0) + 1;
     const nuevoMedicamento: Medicamento = {
       id: nuevoId,
       nombre,
@@ -327,7 +350,7 @@ export class Dashboard implements OnInit {
       fechaVencimiento,
       estado,
       indicaciones,
-      selected: false
+      selected: false,
     };
     this.medicamentos.push(nuevoMedicamento);
     this.guardarMedicamentosEnLocalStorage();
@@ -341,16 +364,16 @@ export class Dashboard implements OnInit {
     if (this.userDropdown && !this.userDropdown.nativeElement.contains(event.target)) {
       this.showUserMenu = false;
     }
-    
+
     const medActionsElements = document.querySelectorAll('.med-actions-container');
     let clickedInsideMedActions = false;
-    
-    medActionsElements.forEach(element => {
+
+    medActionsElements.forEach((element) => {
       if (element.contains(event.target as Node)) {
         clickedInsideMedActions = true;
       }
     });
-    
+
     if (!clickedInsideMedActions) {
       this.openMedDropdowns.clear();
     }
@@ -362,4 +385,3 @@ export class Dashboard implements OnInit {
     this.router.navigate(['']);
   }
 }
-

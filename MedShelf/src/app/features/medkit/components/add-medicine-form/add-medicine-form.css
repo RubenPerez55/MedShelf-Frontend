@@ -11,7 +11,6 @@
 .fab-return {
   display: flex;
   justify-content: flex-start;
-  margin-bottom: 1rem;
 }
 
 .fab-return a {
@@ -23,11 +22,11 @@
   cursor: pointer;
   transition: all 0.3s ease;
   text-decoration: none;
+  color: var(--primary-contrast);
 }
 
 .form h2 {
   text-align: center;
-  margin-top: 1rem;
   margin-bottom: 1.5rem;
   color: var(--primary-contrast);
   font-size: 1.5rem;
@@ -78,12 +77,15 @@ textarea {
 .submit-btn {
   margin: 0;
   margin-top: 1rem;
-  margin-bottom: 3rem;
+  margin-bottom: 4rem;
+  display: flex;
+  justify-content: center;
+  gap: .5rem;
   padding: 1rem;
   border: none;
   border-radius: 8px;
   background: var(--brand-color);
-  color: white;
+  color: var(--secondary-contrast);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;

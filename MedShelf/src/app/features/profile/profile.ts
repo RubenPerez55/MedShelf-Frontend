@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ThemeService, type Theme } from '../../shared/services/theme.service';
 import { LucideAngularModule, Moon, Sun } from 'lucide-angular';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
-  imports: [LucideAngularModule, RouterLink, RouterOutlet],
+  imports: [CommonModule, LucideAngularModule, RouterLink],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })

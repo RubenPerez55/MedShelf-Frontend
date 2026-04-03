@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { LucideAngularModule, ArrowLeft } from 'lucide-angular';
+import { LucideAngularModule, ArrowLeft, Check } from 'lucide-angular';
 
 @Component({
   selector: 'app-add-medicine-form',
@@ -9,5 +9,5 @@ import { LucideAngularModule, ArrowLeft } from 'lucide-angular';
   styleUrl: './add-medicine-form.css',
 })
 export class AddMedicineForm {
-icons = { arrowLeft: ArrowLeft };
+icons = { arrowLeft: ArrowLeft, check: Check };
 }

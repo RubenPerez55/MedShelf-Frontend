@@ -18,9 +18,11 @@
       class="select-input"
      required>
       <option value="" disabled>Selecciona un medicamento</option>
-      <option *ngFor="let med of medicines" [value]="med.id">
-        {{ med.name }} - {{ med.dose }} ({{ med.quantity }} disponibles)
-      </option>
+      @for (med of medicines; track med.id) {
+        <option [value]="med.id">
+          {{ med.name }} - {{ med.dose }} ({{ med.quantity }} disponibles)
+        </option>
+      }
     </select>
   </div>
 
@@ -52,12 +54,16 @@
     </div>
 
     <!-- Vista previa de horarios -->
-    <div *ngIf="treatment.frequency" class="schedule-preview">
-      <p class="preview-label">Próximas tomas:</p>
-      <div class="times-list">
-        <span *ngFor="let time of getNextScheduledTimes()" class="time-badge">{{ time }}</span>
+    @if (treatment.frequency) {
+      <div class="schedule-preview">
+        <p class="preview-label">Próximas tomas:</p>
+        <div class="times-list">
+          @for (time of getNextScheduledTimes(); track time) {
+            <span class="time-badge">{{ time }}</span>
+          }
+        </div>
       </div>
-    </div>
+    }
   </div>
 
   <!-- Duración -->

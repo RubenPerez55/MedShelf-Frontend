@@ -217,10 +217,10 @@
   color: var(--warning-text);
 }
 
-/* ── FAB ── */
+/* Floating Action Button */
 .fab {
   position: fixed;
-  bottom: 1.5rem;
+  bottom: 4.5rem;
   right: 1rem;
   width: 56px;
   height: 56px;
@@ -228,17 +228,14 @@
   background: var(--brand-color);
   border: none;
   color: var(--secondary-contrast);
+  font-size: 1.75rem;
   cursor: pointer;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 50;
-  transition: transform 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.fab:active {
-  transform: scale(0.93);
+  z-index: 40;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 .fab-icon {
@@ -246,4 +243,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.fab:active {
+  transform: scale(0.92);
 }

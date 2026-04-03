@@ -7,6 +7,24 @@
   box-sizing: border-box;
 }
 
+/* Botón FAB Return */
+.fab-return {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
+}
+
+.fab-return a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
 .form h2 {
   text-align: center;
   margin-top: 1rem;

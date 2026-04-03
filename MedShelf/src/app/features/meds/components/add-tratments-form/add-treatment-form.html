@@ -1,48 +1,98 @@
-<form class="form">
-  <h2>Agregar medicamento</h2>
-
-  <!-- Nombre -->
-  <div class="form-group">
-    <label>Nombre</label>
-    <input type="text" placeholder="Ej. Paracetamol" />
+<form class="form" (ngSubmit)="saveTreatment()">
+  <div class="fab-return">
+    <a routerLink="/meds" title="Volver">
+      <lucide-angular [img]="icons.arrowLeft" size="24" class="fab-icon"></lucide-angular>
+    </a>
   </div>
 
-  <!-- Dosis -->
-  <div class="form-group">
-    <label>Dosis</label>
-    <input type="text" placeholder="Ej. 500 mg" />
-  </div>
+  <h2>Agregar Tratamiento</h2>
 
-  <!-- Frecuencia -->
+  <!-- Medicamento -->
   <div class="form-group">
-    <label>Frecuencia</label>
-    <input type="text" placeholder="Ej. Cada 8 horas" />
+    <label for="medicine">Medicamento del botiquín</label>
+    <select 
+      id="medicine" 
+      [(ngModel)]="treatment.medicineId" 
+      (change)="onMedicineChange()"
+      name="medicineId"
+      class="select-input"
+     required>
+      <option value="" disabled>Selecciona un medicamento</option>
+      <option *ngFor="let med of medicines" [value]="med.id">
+        {{ med.name }} - {{ med.dose }} ({{ med.quantity }} disponibles)
+      </option>
+    </select>
   </div>
 
   <!-- Horario -->
-  <div class="form-group">
-    <label>Hora</label>
-    <input type="time" />
+  <div class="form-section">
+    <h3>Horario de administración</h3>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="frequency">Cada cuántas horas</label>
+        <input 
+          type="number" 
+          id="frequency" 
+          [(ngModel)]="treatment.frequency" 
+          name="frequency"
+          min="1" 
+          max="24"
+          placeholder="Ej. 8" />
+      </div>
+      
+      <div class="form-group">
+        <label for="startTime">Hora de inicio</label>
+        <input 
+          type="time" 
+          id="startTime" 
+          [(ngModel)]="treatment.startTime" 
+          name="startTime" />
+      </div>
+    </div>
+
+    <!-- Vista previa de horarios -->
+    <div *ngIf="treatment.frequency" class="schedule-preview">
+      <p class="preview-label">Próximas tomas:</p>
+      <div class="times-list">
+        <span *ngFor="let time of getNextScheduledTimes()" class="time-badge">{{ time }}</span>
+      </div>
+    </div>
   </div>
 
   <!-- Duración -->
   <div class="form-group">
-    <label>Duración</label>
-    <input type="text" placeholder="Ej. 7 días" />
+    <label for="duration">Duración del tratamiento</label>
+    <div class="duration-input">
+      <input 
+        type="number" 
+        id="duration" 
+        [(ngModel)]="treatment.duration" 
+        name="duration"
+        min="1" 
+        max="365"
+        placeholder="Ej. 7" />
+      <select [(ngModel)]="treatment.durationUnit" name="durationUnit" class="duration-select">
+        <option value="dias">días</option>
+        <option value="semanas">semanas</option>
+        <option value="meses">meses</option>
+      </select>
+    </div>
   </div>
 
-  <!-- Cantidad -->
+  <!-- Notas -->
   <div class="form-group">
-    <label>Cantidad</label>
-    <input type="number" placeholder="Ej. 10 tabletas" />
-  </div>
-
-  <!-- Indicaciones -->
-  <div class="form-group">
-    <label>Indicaciones</label>
-    <textarea placeholder="Ej. Después de comer"></textarea>
+    <label for="notes">Notas adicionales</label>
+    <textarea 
+      id="notes" 
+      [(ngModel)]="treatment.notes" 
+      name="notes"
+      placeholder="Ej. Después de comer, no mezclar con alcohol..."></textarea>
   </div>
 
   <!-- Botón -->
-  <button type="submit" class="submit-btn">Guardar</button>
+  <button type="submit" class="submit-btn">
+    <lucide-angular [img]="icons.check" size="20" class="btn-icon"></lucide-angular>
+    Guardar Tratamiento
+  </button>
 </form>

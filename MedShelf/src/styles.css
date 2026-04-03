@@ -16,7 +16,7 @@
   --input-border: #ddd;
   --navbar-bg: #ffffff;
   --gradient-primary: linear-gradient(90deg, rgb(80, 165, 118) 0%, rgb(117, 252, 173) 80%);
-  --brand-color: #2e7d32;
+  --brand-color: #185fa5;
   --navbar-height: 60px;
 
   /* Custom Light Theme Colors */
@@ -53,7 +53,7 @@
   --input-border: #444444;
   --navbar-bg: #252525;
   --gradient-primary: linear-gradient(90deg, rgb(255, 255, 255) 0%, rgb(148, 255, 182) 80%);
-  --brand-color: #2ad433;
+  --brand-color: #b4dffc;
 
   /* Custom Dark Theme Colors */
   --page-background: #1a1a1a;

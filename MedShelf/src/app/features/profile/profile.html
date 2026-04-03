@@ -87,8 +87,9 @@
   </div>
 
   <!-- Botón editar -->
-  <button class="btn-editar">Editar perfil</button>
+  <button class="btn-editar" routerLink="edit">Editar perfil</button>
 
+  <!-- Botón de tema -->
   <button class="btn-tema" (click)="toggleTheme()">
     @if (currentTheme === 'light') {
        <lucide-angular [img]="icons.moon" size="18"></lucide-angular>

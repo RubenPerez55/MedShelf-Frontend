@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ThemeService, type Theme } from '../../shared/services/theme.service';
 import { LucideAngularModule, Moon, Sun } from 'lucide-angular';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
-  imports: [LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, RouterLink],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
@@ -50,5 +52,9 @@ export class Profile {
   toggleTheme() {
     this.themeService.toggleTheme();
     this.currentTheme = this.themeService.getCurrentTheme();
+  }
+
+  editprofile() {
+    console.log('Edit profile clicked');
   }
 }

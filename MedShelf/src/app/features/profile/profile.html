@@ -88,4 +88,13 @@
 
   <!-- Botón editar -->
   <button class="btn-editar">Editar perfil</button>
+
+  <button class="btn-tema" (click)="toggleTheme()">
+    @if (currentTheme === 'light') {
+       <lucide-angular [img]="icons.moon" size="18"></lucide-angular>
+    } @else {
+       <lucide-angular [img]="icons.sun" size="18"></lucide-angular>
+    }
+    <span>{{ currentTheme === 'light' ? 'Tema Oscuro' : 'Tema Claro' }}</span>
+  </button>
 </div>

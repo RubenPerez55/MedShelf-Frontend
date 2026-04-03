@@ -1,120 +1,53 @@
-<div class="dashboard-container">
-  <!-- Navbar -->
-  <nav class="dashboard-navbar">
-    <div class="navbar-brand">
-      <h2>MedShelf</h2>
-    </div>
-
-    <div class="navbar-actions">
-      <div class="navbar-user" #userDropdown>
-        <div class="user-avatar" (click)="toggleUserMenu()">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-user-icon lucide-user"
-          >
-            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
-        </div>
-
-        <!-- Menu -->
-        <div class="user-dropdown" [class.active]="showUserMenu">
-          <div class="dropdown-user-info">
-            <p class="user-name">Mi Cuenta</p>
-            <p class="user-email">usuario@medshelf.com</p>
-          </div>
-
-          <button class="dropdown-item theme-toggle-btn" (click)="toggleTheme()">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-moon-icon lucide-moon"
-            >
-              <path
-                d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"
-              />
-            </svg>
-            <span>{{ currentTheme === 'light' ? 'Tema Oscuro' : 'Tema Claro' }}</span>
-          </button>
-
-          <div class="dropdown-divider"></div>
-
-          <button class="dropdown-item" (click)="cerrarSesion()">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-log-out-icon lucide-log-out"
-            >
-              <path d="m16 17 5-5-5-5" />
-              <path d="M21 12H9" />
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-            </svg>
-            <span>Cerrar Sesión</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </nav>
-  <main>
-    <!-- Header -->
-    <header class="dashboard-header">
-      <h1>Mi botiquín MedShelf</h1>
-    </header>
+<main>
+  <!-- Header -->
+  <div class="header">
+    <h2>Botiquín</h2>
+  </div>
 
     <!-- Statistics Section -->
     <section class="stats-section">
-      <div class="stat-card">
+      <div class="stat-card thumbs-up-border">
         <div class="stat-icon">
           <lucide-angular
             [img]="icons.thumbsUp"
-            size="40"
-            class="stat-icon-thumbs-up"
+            size="80"
+            class="thumbs-up"
           ></lucide-angular>
         </div>
         <div class="stat-content">
           <p class="stat-label">Vigentes</p>
-          <p class="stat-value">{{ vigentes }}</p>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">
-          <lucide-angular [img]="icons.clock" size="40" class="stat-icon-clock"></lucide-angular>
-        </div>
-        <div class="stat-content">
-          <p class="stat-label">Próximos a vencer</p>
-          <p class="stat-value">{{ proximosVencer }}</p>
+          <p class="stat-value thumbs-up">{{ vigentes }}</p>
+          <p class="stat-info">Estado óptimo de conservación</p>
         </div>
       </div>
 
-      <div class="stat-card">
+      <div class="stat-card clock-border">
         <div class="stat-icon">
-          <lucide-angular [img]="icons.alert" size="40" class="stat-icon-alert"></lucide-angular>
+          <lucide-angular 
+          [img]="icons.clock" 
+          size="80" 
+          class="clock"
+          ></lucide-angular>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Próximos a vencer</p>
+          <p class="stat-value clock">{{ proximosVencer }}</p>
+          <p class="stat-info">Vencimiento en los próximos 30 días</p>
+        </div>
+      </div>
+
+      <div class="stat-card alert-border">
+        <div class="stat-icon">
+          <lucide-angular 
+          [img]="icons.alert" 
+          size="80" 
+          class="alert"
+          ></lucide-angular>
         </div>
         <div class="stat-content">
           <p class="stat-label">Caducados</p>
-          <p class="stat-value">{{ caducados }}</p>
+          <p class="stat-value alert">{{ caducados }}</p>
+          <p class="stat-info">Requiere retiro de inmediato</p>
         </div>
       </div>
     </section>
@@ -305,7 +238,6 @@
 
     <!-- Floating Action Button -->
     <a class="fab" routerLink="/medkit/add-medicine" title="Agregar medicamento">
-      <lucide-angular [img]="icons.plus" size="24" class="fab-icon"></lucide-angular>
+      <lucide-angular [img]="icons.plus" size="28" class="fab-icon"></lucide-angular>
     </a>
   </main>
-</div>

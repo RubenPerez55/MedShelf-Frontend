@@ -1,43 +1,43 @@
 /* ── Base ── */
 .treatment-container {
-  padding: 16px 16px 100px;
-  background: #f7f9fc;
+  padding: 1rem 1rem 100px;
+  background: var(--page-background);
   min-height: 100vh;
   font-family: 'Segoe UI', Roboto, sans-serif;
 }
 
 /* ── Header ── */
 .header {
-  margin-bottom: 16px;
+  margin-bottom: 1.25rem;
 }
 
 .header h2 {
-  font-size: 22px;
-  font-weight: 600;
-  color: #002b5b;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--heading-color);
   margin: 0;
 }
 
 /* ── Título de sección ── */
 .titulo-seccion {
-  color: #888;
-  font-size: 11px;
+  color: var(--section-label-color);
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  margin: 0 0 10px;
+  margin: 0 0 0.75rem;
 }
 
 /* ── Medicamentos activos ── */
 .seccion-activos {
-  margin-bottom: 24px;
+  margin-bottom: 1.5rem;
 }
 
 .activos-scroll {
   display: flex;
-  gap: 10px;
+  gap: 0.75rem;
   overflow-x: auto;
-  padding-bottom: 6px;
+  padding-bottom: 0.5rem;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
@@ -47,26 +47,26 @@
 }
 
 .tarjeta-activo {
-  min-width: 130px;
-  background: white;
-  border: 1px solid #e5e2d9;
+  min-width: 140px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
   border-radius: 16px;
-  padding: 14px 12px;
+  padding: 1rem 0.75rem;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0.25rem;
 }
 
 .activo-icono {
-  font-size: 22px;
-  margin-bottom: 4px;
+  font-size: 1.75rem;
+  margin-bottom: 0.25rem;
 }
 
 .activo-nombre {
-  font-size: 13px;
+  font-size: 0.95rem;
   font-weight: 600;
-  color: #002b5b;
+  color: var(--heading-color);
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -74,36 +74,36 @@
 }
 
 .activo-dosis {
-  font-size: 11px;
-  color: #999;
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
   margin: 0;
 }
 
 .activo-progreso {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 8px;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
 }
 
 .barra-progreso {
   flex: 1;
-  height: 4px;
-  background: #eef2f7;
+  height: 5px;
+  background: var(--bg-secondary);
   border-radius: 10px;
   overflow: hidden;
 }
 
 .barra-fill {
   height: 100%;
-  background: #185fa5;
+  background: var(--primary-blue);
   border-radius: 10px;
   transition: width 0.3s ease;
 }
 
 .activo-dias {
-  font-size: 10px;
-  color: #185fa5;
+  font-size: 0.8rem;
+  color: var(--primary-blue);
   font-weight: 600;
   white-space: nowrap;
 }
@@ -112,23 +112,23 @@
 .treatment-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.75rem;
 }
 
 .label-horario {
-  font-size: 11px;
+  font-size: 0.8rem;
   font-weight: 600;
-  color: #888;
+  color: var(--section-label-color);
   letter-spacing: 1px;
   text-transform: uppercase;
-  margin: 8px 0 4px;
+  margin: 0.75rem 0 0.5rem;
 }
 
 .treatment-group {
-  background: white;
-  border: 1px solid #eceae4;
+  background: var(--card-bg);
+  border: 1px solid var(--border-lighter);
   border-radius: 14px;
-  padding: 4px 12px;
+  padding: 0.5rem 1rem;
   display: flex;
   flex-direction: column;
 }
@@ -137,11 +137,12 @@
 .treatment-card {
   display: flex;
   align-items: center;
-  padding: 10px 0;
+  padding: 1rem 0;
+  min-height: 70px;
 }
 
 .treatment-card:not(:last-child) {
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .treatment-card:active {
@@ -150,38 +151,38 @@
 
 /* Hora */
 .left {
-  width: 52px;
+  width: 60px;
   flex-shrink: 0;
 }
 
 .time {
-  font-size: 13px;
+  font-size: 1rem;
   font-weight: 700;
-  color: #002b5b;
+  color: var(--heading-color);
   font-variant-numeric: tabular-nums;
 }
 
 /* Info */
 .center {
   flex: 1;
-  padding: 0 10px;
+  padding: 0 0.75rem;
   min-width: 0;
 }
 
 .center h3 {
   margin: 0;
-  font-size: 14px;
+  font-size: 0.95rem;
   font-weight: 600;
-  color: #1a1a2e;
+  color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .center p {
-  margin: 2px 0 0;
-  font-size: 12px;
-  color: #6b7280;
+  margin: 0.2rem 0 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
 }
 
 /* Botón estado */
@@ -191,13 +192,15 @@
 
 .take-btn {
   border: none;
-  padding: 5px 11px;
+  padding: 0.5rem 1rem;
   border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
   font-family: 'Segoe UI', Roboto, sans-serif;
   transition: opacity 0.15s;
+  min-height: 40px;
+  min-width: 80px;
 }
 
 .take-btn:active {
@@ -205,22 +208,22 @@
 }
 
 .take-btn.taken {
-  background: #e6f4f1;
-  color: #3d7a6f;
+  background: var(--success-bg);
+  color: var(--success-text);
 }
 
 .take-btn.pending {
-  background: #fef3e2;
-  color: #8a5a2b;
+  background: var(--warning-bg);
+  color: var(--warning-text);
 }
 
 /* ── FAB ── */
 .fab {
   position: fixed;
-  bottom: calc(var(--navbar-height) + 1.5rem);
-  right: 1.5rem;
-  width: 52px;
-  height: 52px;
+  bottom: 1.5rem;
+  right: 1rem;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   background: var(--brand-color);
   border: none;
@@ -243,12 +246,4 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-@media (max-width: 768px) {
-  .fab {
-    right: 1rem;
-    width: 48px;
-    height: 48px;
-  }
 }

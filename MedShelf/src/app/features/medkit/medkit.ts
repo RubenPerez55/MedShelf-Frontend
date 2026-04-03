@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -25,6 +25,7 @@ interface Medicamento {
 })
 export class Medkit implements OnInit {
   @ViewChild('userDropdown') userDropdown!: ElementRef;
+  private themeService = inject(ThemeService);
 
   icons = {
     thumbsUp: ThumbsUp,
@@ -42,7 +43,6 @@ export class Medkit implements OnInit {
   vigentes: number = 0;
 
   showUserMenu: boolean = false;
-  currentTheme: Theme = 'light';
   openMedDropdowns: Set<number> = new Set();
   medicamentosSeleccionados: number = 0;
   private readonly LOCAL_STORAGE_KEY = 'medshelf_medicamentos';
@@ -55,14 +55,11 @@ export class Medkit implements OnInit {
     this._medicamentosFiltrados = value;
   }
 
-  constructor(
-    private router: Router,
-    private themeService: ThemeService,
-  ) {
-    this.currentTheme = this.themeService.getCurrentTheme();
-  }
+  constructor(private router: Router) {}
 
   ngOnInit() {
+    // Subscribe to theme changes to force Angular change detection
+    this.themeService.theme$.subscribe();
     this.cargarMedicamentos();
     this.medicamentosFiltrados = [...this.medicamentos];
     this.calcularEstadisticas();
@@ -241,11 +238,6 @@ export class Medkit implements OnInit {
   }
 
   agregarMedicamento() {}
-
-  toggleTheme() {
-    this.themeService.toggleTheme();
-    this.currentTheme = this.themeService.getCurrentTheme();
-  }
 
   toggleUserMenu() {
     this.showUserMenu = !this.showUserMenu;

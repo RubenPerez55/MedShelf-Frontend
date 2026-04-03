@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LucideAngularModule, House, Plus } from 'lucide-angular';
+import { ThemeService } from '../../shared/services/theme.service';
 
 @Component({
   selector: 'app-home',
@@ -8,7 +9,13 @@ import { LucideAngularModule, House, Plus } from 'lucide-angular';
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-export class Home {
+export class Home implements OnInit {
+  private themeService = inject(ThemeService);
+
+  ngOnInit() {
+    // Subscribe to theme changes to force Angular change detection
+    this.themeService.theme$.subscribe();
+  }
   profiles = [
     {
       id: 1,

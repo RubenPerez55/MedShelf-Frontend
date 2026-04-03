@@ -1,12 +1,23 @@
 import { Component } from '@angular/core';
+import { ThemeService, type Theme } from '../../shared/services/theme.service';
+import { LucideAngularModule, Moon, Sun } from 'lucide-angular';
 
 @Component({
   selector: 'app-profile',
-  imports: [],
+  imports: [LucideAngularModule],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
 export class Profile {
+  currentTheme: Theme = 'light';
+  icons = { moon: Moon, sun: Sun };
+
+  constructor(
+    private themeService: ThemeService,
+  ) {
+    this.currentTheme = this.themeService.getCurrentTheme();
+  }
+
   profile = {
     name: 'John Doe',
     age: 30,
@@ -35,4 +46,9 @@ export class Profile {
       relation: 'Child',
     },
   ];
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
+    this.currentTheme = this.themeService.getCurrentTheme();
+  }
 }

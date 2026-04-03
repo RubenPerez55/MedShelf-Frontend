@@ -18,7 +18,7 @@ export class Login {
 
   onSubmit() {
     if (this.email == "admin" && this.password == "admin") {
-      this.router.navigate(['dashboard']);
+      this.router.navigate(['']);
     }
     console.log("intenta poniendo admin a ver si jala");
   }

@@ -33,16 +33,16 @@ div {
   margin: 0;
 }
 
-/* ── Secciones generales ── */
-.seccion-familia,
-.seccion-ubicaciones {
+/* ── General sections ── */
+.family-section,
+.locations-section {
   padding: 1.25rem 1rem 0;
   padding-left: max(1rem, env(safe-area-inset-left));
   padding-right: max(1rem, env(safe-area-inset-right));
   padding-bottom: max(3rem, calc(3rem + env(safe-area-inset-bottom)));
 }
 
-.titulo-seccion {
+.section-title {
   color: var(--section-label-color);
   font-size: 0.75rem;
   font-weight: 600;
@@ -51,8 +51,8 @@ div {
   text-transform: uppercase;
 }
 
-/* ── Perfiles ── */
-.contenedor-tarjetas {
+/* ── Profiles ── */
+.card-container {
   display: flex;
   gap: 0.75rem;
   overflow-x: auto;
@@ -61,11 +61,11 @@ div {
   scrollbar-width: none;
 }
 
-.contenedor-tarjetas::-webkit-scrollbar {
+.card-container::-webkit-scrollbar {
   display: none;
 }
 
-.tarjeta-perfil {
+.profile-card {
   border: 1px solid var(--border-light);
   border-radius: 16px;
   padding: 1rem 0.75rem;
@@ -82,7 +82,7 @@ div {
   justify-content: center;
 }
 
-.tarjeta-perfil:active {
+.profile-card:active {
   transform: scale(0.96);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -101,28 +101,28 @@ div {
   margin-bottom: 0.75rem;
 }
 
-.nombre {
+.name {
   color: var(--heading-color);
   font-weight: 600;
   margin: 0;
   font-size: 0.95rem;
 }
 
-.conteo {
+.count {
   color: var(--text-tertiary);
   font-size: 0.85rem;
   margin: 0.25rem 0 0;
 }
 
-/* ── Ubicaciones ── */
-.contenedor-grid {
+/* ── Locations ── */
+.grid-container {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   margin-top: 0.25rem;
 }
 
-.tarjeta-lugar {
+.location-card {
   background: var(--card-bg);
   border: 1px solid var(--border-lighter);
   border-radius: 14px;
@@ -136,12 +136,12 @@ div {
   box-sizing: border-box;
 }
 
-.tarjeta-lugar:active {
+.location-card:active {
   transform: scale(0.98);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.icono {
+.icon {
   width: 56px;
   height: 56px;
   background: var(--bg-primary);
@@ -154,7 +154,7 @@ div {
   font-size: 1.75rem;
 }
 
-.info-lugar {
+.location-info {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -162,7 +162,7 @@ div {
   min-width: 0;
 }
 
-.info-lugar h3 {
+.location-info h3 {
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--heading-color);
@@ -172,20 +172,20 @@ div {
   text-overflow: ellipsis;
 }
 
-.info-lugar span {
+.location-info span {
   font-size: 0.85rem;
   color: var(--text-tertiary);
 }
 
-.info-lugar .conteo {
+.location-info .count {
   font-size: 0.8rem;
   color: var(--primary-blue);
   font-weight: 500;
   margin: 0;
 }
 
-/* ── Botón nueva ubicación ── */
-.btn-anadir-lugar {
+/* ── Add new location button ── */
+.btn-add-location {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -205,7 +205,7 @@ div {
   box-sizing: border-box;
 }
 
-.btn-anadir-lugar:active {
+.btn-add-location:active {
   background: var(--bg-primary);
   transform: scale(0.98);
 }

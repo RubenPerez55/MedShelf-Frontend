@@ -48,7 +48,8 @@ label {
 
 /* Inputs */
 input,
-textarea {
+textarea, 
+select {
   padding: 0.875rem;
   border-radius: 8px;
   border: 2px solid var(--input-border);

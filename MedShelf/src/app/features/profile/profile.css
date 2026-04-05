@@ -29,7 +29,6 @@
   justify-content: center;
   font-size: 2rem;
   font-weight: 700;
-  color: var(--avatar-text);
   border: 3px solid var(--card-bg);
   box-shadow: 0 0 0 2px var(--avatar-border);
 }
@@ -117,7 +116,7 @@
 }
 
 /* ── Sección título ── */
-.titulo-seccion {
+.section-title {
   text-align: left;
   color: var(--section-label-color);
   font-size: 0.8rem;
@@ -205,15 +204,32 @@
 
 .profile-card p {
   font-size: 0.9rem;
-  color: var(--text-tertiary);
   margin: 0;
 }
 
 .add-btn {
   background: var(--primary-blue);
-  color: var(--secondary-contrast);
+  color: white;
   font-size: 1.75rem;
   font-weight: 300;
+  text-decoration: none;
+}
+
+.add-btn a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-btn a:active,
+.add-btn a:visited {
+  color: white;
+}
+
+.add-icon {
+  color: white !important;
 }
 
 /* ── Botón editar ── */
@@ -234,13 +250,13 @@
   min-height: 48px;
 }
 
-.btn-editar {
+.btn-edit {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   color: var(--primary-blue);
 }
 
-.btn-tema {
+.btn-theme {
   background: var(--primary-contrast);
   color: var(--secondary-contrast);
   border: none;
@@ -248,4 +264,12 @@
 
 .profile-container button:active {
   background: var(--bg-primary);
+}
+
+/* Botón de cierre de sesión */
+.btn-logout {
+  border: none;
+  background: var(--error-bg);
+  color: var(--error-text);
+
 }

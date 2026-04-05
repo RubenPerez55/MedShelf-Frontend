@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThemeService, type Theme } from '../../shared/services/theme.service';
-import { LucideAngularModule, Moon, Sun } from 'lucide-angular';
-import { RouterLink } from '@angular/router';
+import { LucideAngularModule, Moon, Sun, Plus } from 'lucide-angular';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -12,10 +12,11 @@ import { RouterLink } from '@angular/router';
 })
 export class Profile {
   currentTheme: Theme = 'light';
-  icons = { moon: Moon, sun: Sun };
+  icons = { moon: Moon, sun: Sun, plus: Plus };
 
   constructor(
     private themeService: ThemeService,
+    private router: Router
   ) {
     this.currentTheme = this.themeService.getCurrentTheme();
   }
@@ -54,7 +55,11 @@ export class Profile {
     this.currentTheme = this.themeService.getCurrentTheme();
   }
 
-  editprofile() {
+  editProfile() {
     console.log('Edit profile clicked');
+  }
+
+  logout() {
+    this.router.navigate(['/login']);
   }
 }

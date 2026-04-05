@@ -121,7 +121,7 @@ div {
   margin: 0;
 }
 
-/* Search Section */
+/* Barra de busqueda */
 .search-section {
   margin-bottom: 1.5rem;
 }
@@ -175,17 +175,19 @@ div {
   min-height: 140px;
   border: 1px solid var(--border-lighter);
   border-left: 5px solid var(--primary-blue);
+  overflow: visible;
+  z-index: 1;
 }
 
-.medication-card.status-vigente {
+.medication-card.status-valid {
   border-left-color: var(--success-text);
 }
 
-.medication-card.status-proximoVencer {
+.medication-card.status-expiringNext {
   border-left-color: var(--warning-text);
 }
 
-.medication-card.status-caducado {
+.medication-card.status-expired {
   border-left-color: var(--error-text);
   opacity: 0.7;
 }
@@ -240,17 +242,17 @@ div {
   align-self: flex-start;
 }
 
-.medication-card.status-vigente .med-status {
+.medication-card.status-valid .med-status {
   background: var(--success-bg);
   color: var(--success-text);
 }
 
-.medication-card.status-proximoVencer .med-status {
+.medication-card.status-expiringNext .med-status {
   background: var(--warning-bg);
   color: var(--warning-text);
 }
 
-.medication-card.status-caducado .med-status {
+.medication-card.status-expired .med-status {
   background: var(--error-bg);
   color: var(--error-text);
 }
@@ -294,11 +296,11 @@ div {
   font-size: 1rem;
 }
 
-.medication-card.status-proximoVencer .expiry-date {
+.medication-card.status-expiringNext .expiry-date {
   color: #ff9800;
 }
 
-.medication-card.status-caducado .expiry-date {
+.medication-card.status-expired .expiry-date {
   color: #f44336;
 }
 
@@ -390,29 +392,28 @@ div {
 }
 
 .med-dropdown {
-  position: fixed;
-  top: auto;
-  bottom: 0;
+  position: absolute;
+  top: 100%;
   right: 0;
-  left: 0;
   background: var(--bg-primary);
-  border-radius: 16px 16px 0 0;
+  border-radius: 8px;
   box-shadow: var(--card-shadow-hover);
-  width: 100%;
+  width: 200px;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(100%);
+  transform: translateY(-10px);
   transition: all 0.3s ease;
   z-index: 1000;
-  max-height: 60vh;
+  max-height: auto;
   overflow-y: auto;
-  padding: 1rem 0 2rem 0;
+  padding: 0.5rem 0;
+  margin-top: 0.5rem;
 }
 
 .med-dropdown.active {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0%);
+  transform: translateY(0);
 }
 
 .med-dropdown-item {
@@ -566,11 +567,11 @@ div {
   font-size: 1rem;
 }
 
-.medication-card.status-proximoVencer .expiry-date {
+.medication-card.status-expiringNext .expiry-date {
   color: #ff9800;
 }
 
-.medication-card.status-caducado .expiry-date {
+.medication-card.status-expired .expiry-date {
   color: #f44336;
 }
 

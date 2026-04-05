@@ -80,7 +80,11 @@
         </div>
       }
       <div class="profile-card">
-        <div class="avatar small add-btn">+</div>
+        <div class="avatar small add-btn">
+          <a routerLink="add-family" title="Agregar perfil familiar">
+            <lucide-angular [img]="icons.plus" size="16" class="add-icon"></lucide-angular>
+          </a>
+        </div>
         <p>Añadir</p>
       </div>
     </div>

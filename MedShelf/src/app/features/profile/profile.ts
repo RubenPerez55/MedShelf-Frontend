@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThemeService, type Theme } from '../../shared/services/theme.service';
-import { LucideAngularModule, Moon, Sun } from 'lucide-angular';
+import { LucideAngularModule, Moon, Sun, Plus } from 'lucide-angular';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
@@ -12,7 +12,7 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class Profile {
   currentTheme: Theme = 'light';
-  icons = { moon: Moon, sun: Sun };
+  icons = { moon: Moon, sun: Sun, plus: Plus };
 
   constructor(
     private themeService: ThemeService,

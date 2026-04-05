@@ -42,6 +42,17 @@
     <input type="number" placeholder="Ej. 10 tabletas" />
   </div>
 
+  <!-- Ubicación -->
+  <div class="form-group">
+    <label>Ubicación</label>
+    <select name="location" id="location">
+      <option value="">Selecciona una ubicación</option>
+      @for (location of locations; track location.id) {
+        <option [value]="location.id">{{ location.name }} - {{ location.description }}</option>
+      }
+    </select>
+  </div>
+
   <!-- Indicaciones -->
   <div class="form-group">
     <label>Indicaciones</label>

@@ -1,0 +1,56 @@
+<div class="add-ubication-container">
+  <div class="header-actions">
+    <button class="btn-back" (click)="cancel()" title="Volver">
+      <lucide-angular [img]="icons.arrowLeft" size="24"></lucide-angular>
+    </button>
+    <h2>Agregar Ubicación</h2>
+    <div></div>
+  </div>
+
+  <form class="add-ubication-form">
+    <div class="form-group">
+      <label for="name">Nombre de la ubicación</label>
+      <input
+        id="name"
+        type="text"
+        [(ngModel)]="locationData.name"
+        name="name"
+        placeholder="Ej: Habitación principal"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="description">Descripción</label>
+      <textarea
+        id="description"
+        [(ngModel)]="locationData.description"
+        name="description"
+        placeholder="Describe dónde se almacenan los medicamentos..."
+        rows="3"
+      ></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="icon">Tipo de ubicación</label>
+      <select
+        id="icon"
+        [(ngModel)]="locationData.icon"
+        name="icon"
+        class="select-input"
+      >
+        <option *ngFor="let icon of icons_options" [value]="icon">
+          {{ icon | titlecase }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-save" (click)="addLocation()">
+        Guardar Ubicación
+      </button>
+      <button type="button" class="btn-cancel" (click)="cancel()">
+        Cancelar
+      </button>
+    </div>
+  </form>
+</div>

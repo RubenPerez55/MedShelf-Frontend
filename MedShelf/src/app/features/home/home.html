@@ -3,41 +3,41 @@
     <h2>Bienvenido</h2>
   </div>
 
-  <div class="seccion-familia">
-    <h2 class="titulo-seccion">PERFILES DE FAMILIA</h2>
+  <div class="family-section">
+    <h2 class="section-title">PERFILES DE FAMILIA</h2>
 
-    <div class="contenedor-tarjetas">
+    <div class="card-container">
       @for (profile of profiles; track profile.id) {
-        <div class="tarjeta-perfil">
+        <div class="profile-card">
           <div class="avatar">
             <span class="initials">{{ profile.initials }}</span>
           </div>
-          <h3 class="nombre">{{ profile.name }}</h3>
-          <p class="conteo">{{ profile.medicines.length }} medicamentos</p>
+          <h3 class="name">{{ profile.name }}</h3>
+          <p class="count">{{ profile.medicines.length }} medicamentos</p>
         </div>
       }
     </div>
   </div>
 
-  <div class="seccion-ubicaciones">
-    <h2 class="titulo-seccion">LUGARES DE ALMACENAMIENTO</h2>
+  <div class="locations-section">
+    <h2 class="section-title">LUGARES DE ALMACENAMIENTO</h2>
 
-    <div class="contenedor-grid">
+    <div class="grid-container">
       @for (location of locations; track location.id) {
-        <div class="tarjeta-lugar">
-          <div class="icono">
+        <div class="location-card">
+          <div class="icon">
             <lucide-icon name="home" [img]="icons.house" [size]="24"> </lucide-icon>
           </div>
-          <div class="info-lugar">
+          <div class="location-info">
             <h3>{{ location.name }}</h3>
             <span>{{ location.description }}</span>
 
-            <span class="conteo">{{ location.quantity }} medicamentos</span>
+            <span class="count">{{ location.quantity }} medicamentos</span>
           </div>
         </div>
       }
 
-      <button class="btn-anadir-lugar">
+      <button class="btn-add-location">
         <lucide-icon name="plus" [img]="icons.plus" [size]="18"> </lucide-icon>
         Nueva ubicación
       </button>

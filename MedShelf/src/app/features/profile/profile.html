@@ -34,7 +34,7 @@
 
   <!-- Información -->
   <div class="info-section">
-    <p class="titulo-seccion">INFORMACIÓN</p>
+    <p class="section-title">INFORMACIÓN</p>
     <div class="info-card">
       <div class="info-item">
         <span class="label">Nombre</span>
@@ -69,7 +69,7 @@
 
   <!-- Otros perfiles -->
   <div class="profiles-section">
-    <p class="titulo-seccion">FAMILIA</p>
+    <p class="section-title">FAMILIA</p>
     <div class="profiles-list">
       @for (profile of familyProfiles; track profile.id) {
         <div class="profile-card">
@@ -85,17 +85,18 @@
       </div>
     </div>
   </div>
-
-  <!-- Botón editar -->
-  <button class="btn-editar" routerLink="edit">Editar perfil</button>
-
-  <!-- Botón de tema -->
-  <button class="btn-tema" (click)="toggleTheme()">
-    @if (currentTheme === 'light') {
-       <lucide-angular [img]="icons.moon" size="18"></lucide-angular>
-    } @else {
-       <lucide-angular [img]="icons.sun" size="18"></lucide-angular>
-    }
-    <span>{{ currentTheme === 'light' ? 'Tema Oscuro' : 'Tema Claro' }}</span>
-  </button>
+  
+  <div class="profile-section">
+    <p class="section-title">AJUSTES</p>
+    <button class="btn-edit" routerLink="edit">Editar perfil</button>
+    <button class="btn-theme" (click)="toggleTheme()">
+      @if (currentTheme === 'light') {
+        <lucide-angular [img]="icons.moon" size="18"></lucide-angular>
+      } @else {
+        <lucide-angular [img]="icons.sun" size="18"></lucide-angular>
+      }
+      <span>{{ currentTheme === 'light' ? 'Tema Oscuro' : 'Tema Claro' }}</span>
+    </button>
+    <button class="btn-logout" (click)="logout()">Cerrar sesión</button> 
+  </div>
 </div>

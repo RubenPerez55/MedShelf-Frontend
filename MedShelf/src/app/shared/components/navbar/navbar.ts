@@ -13,7 +13,7 @@ export class Navbar implements OnInit {
   private themeService = inject(ThemeService);
 
   ngOnInit() {
-    // Subscribe to theme changes to force Angular change detection
+    // Suscribirse a cambios de tema para forzar detección de cambios de Angular
     this.themeService.theme$.subscribe();
   }
   icons = {

@@ -117,7 +117,7 @@
 }
 
 /* ── Sección título ── */
-.titulo-seccion {
+.section-title {
   text-align: left;
   color: var(--section-label-color);
   font-size: 0.8rem;
@@ -234,13 +234,13 @@
   min-height: 48px;
 }
 
-.btn-editar {
+.btn-edit {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   color: var(--primary-blue);
 }
 
-.btn-tema {
+.btn-theme {
   background: var(--primary-contrast);
   color: var(--secondary-contrast);
   border: none;
@@ -248,4 +248,12 @@
 
 .profile-container button:active {
   background: var(--bg-primary);
+}
+
+/* Botón de cierre de sesión */
+.btn-logout {
+  border: none;
+  background: var(--error-bg);
+  color: var(--error-text);
+
 }

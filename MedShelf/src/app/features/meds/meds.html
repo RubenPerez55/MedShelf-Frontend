@@ -4,19 +4,19 @@
   </div>
 
   <!-- Medicamentos activos -->
-  <div class="seccion-activos">
-    <p class="titulo-seccion">MEDICAMENTOS ACTIVOS</p>
-    <div class="activos-scroll">
+  <div class="active-section">
+    <p class="section-title">MEDICAMENTOS ACTIVOS</p>
+    <div class="active-scroll">
       @for (med of meds; track med.id) {
-        <div class="tarjeta-activo">
-          <div class="activo-icono">💊</div>
-          <p class="activo-nombre">{{ med.name }}</p>
-          <p class="activo-dosis">{{ med.dosage }}</p>
-          <div class="activo-progreso">
-            <div class="barra-progreso">
-              <div class="barra-fill" [style.width]="med.progress + '%'"></div>
+        <div class="active-card">
+          <div class="active-icon">💊</div>
+          <p class="active-name">{{ med.name }}</p>
+          <p class="active-dosage">{{ med.dosage }}</p>
+          <div class="active-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width]="med.progress + '%'"></div>
             </div>
-            <span class="activo-dias">{{ med.daysLeft }} días</span>
+            <span class="active-days">{{ med.daysLeft }} días</span>
           </div>
         </div>
       }
@@ -25,7 +25,7 @@
 
   <!-- Lista de tomas -->
   <div class="treatment-list">
-    <p class="label-horario">Mañana</p>
+    <p class="time-label">Mañana</p>
     <div class="treatment-group">
       @for (med of meds; track med.id) {
         <div class="treatment-card">
@@ -45,7 +45,7 @@
       }
     </div>
 
-    <p class="label-horario">Tarde</p>
+    <p class="time-label">Tarde</p>
     <div class="treatment-group">
       <div class="treatment-card">
         <div class="left"><div class="time">14:00</div></div>
@@ -59,7 +59,7 @@
       </div>
     </div>
 
-    <p class="label-horario">Noche</p>
+    <p class="time-label">Noche</p>
     <div class="treatment-group">
       <div class="treatment-card">
         <div class="left"><div class="time">22:00</div></div>
@@ -74,7 +74,7 @@
     </div>
   </div>
 
-  <!-- Floating Action Button -->
+  <!-- Botón de Acción Flotante -->
   <a class="fab" routerLink="add-treatment" title="Agregar tratamiento">
     <lucide-angular [img]="icons.plus" size="28" class="fab-icon"></lucide-angular>
   </a>

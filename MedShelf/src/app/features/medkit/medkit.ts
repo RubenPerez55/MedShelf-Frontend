@@ -3,17 +3,17 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ThemeService, type Theme } from '../../shared/services/theme.service';
-import { Clock4, LucideAngularModule, Plus, ThumbsUp, TriangleAlert } from 'lucide-angular';
+import { Clock4, LucideAngularModule, Plus, ThumbsUp, TriangleAlert, Trash, Pencil, CheckSquare, CircleCheck, MoreVertical } from 'lucide-angular';
 
-interface Medicamento {
+interface Medicine {
   id: number;
-  nombre: string;
-  cantidad: number;
-  unidad: string;
-  dosis: string;
-  fechaVencimiento: Date;
-  estado: 'vigente' | 'proximoVencer' | 'caducado';
-  indicaciones?: string;
+  name: string;
+  quantity: number;
+  unit: string;
+  dosage: string;
+  expiryDate: Date;
+  status: 'valid' | 'expiringNext' | 'expired';
+  instructions?: string;
   selected?: boolean;
 }
 
@@ -32,52 +32,77 @@ export class Medkit implements OnInit {
     clock: Clock4,
     alert: TriangleAlert,
     plus: Plus,
+    trash: Trash,
+    pencil: Pencil,
+    checkSquare: CheckSquare,
+    circleCheck: CircleCheck,
+    moreVertical: MoreVertical
   };
 
-  medicamentos: Medicamento[] = [];
-  private _medicamentosFiltrados: Medicamento[] = [];
+  medicines: Medicine[] = [];
+  private _filteredMedicines: Medicine[] = [];
   searchTerm: string = '';
 
-  caducados: number = 0;
-  proximosVencer: number = 0;
-  vigentes: number = 0;
+  expired: number = 0;
+  expiringNext: number = 0;
+  valid: number = 0;
 
   showUserMenu: boolean = false;
   openMedDropdowns: Set<number> = new Set();
-  medicamentosSeleccionados: number = 0;
+  selectedMedicinesCount: number = 0;
   private readonly LOCAL_STORAGE_KEY = 'medshelf_medicamentos';
 
-  get medicamentosFiltrados(): Medicamento[] {
-    return this._medicamentosFiltrados;
+  get filteredMedicines(): Medicine[] {
+    return this._filteredMedicines;
   }
 
-  set medicamentosFiltrados(value: Medicamento[]) {
-    this._medicamentosFiltrados = value;
+  set filteredMedicines(value: Medicine[]) {
+    this._filteredMedicines = value;
   }
 
   constructor(private router: Router) {}
 
   ngOnInit() {
-    // Subscribe to theme changes to force Angular change detection
+    // Suscribirse a cambios de tema para forzar detección de cambios de Angular
     this.themeService.theme$.subscribe();
-    this.cargarMedicamentos();
-    this.medicamentosFiltrados = [...this.medicamentos];
-    this.calcularEstadisticas();
+    this.loadMedicines();
+    this.filteredMedicines = [...this.medicines];
+    this.calculateStatistics();
   }
 
-  cargarMedicamentos() {
+  loadMedicines() {
     // Intentar cargar desde localStorage
     const datosGuardados = localStorage.getItem(this.LOCAL_STORAGE_KEY);
 
     if (datosGuardados) {
       try {
         const medicamentosGuardados = JSON.parse(datosGuardados);
-        // Convertir strings de fechas nuevamente a Date
-        this.medicamentos = medicamentosGuardados.map((med: any) => ({
-          ...med,
-          fechaVencimiento: new Date(med.fechaVencimiento),
-        }));
-        console.log('Medicamentos cargados desde localStorage:', this.medicamentos.length);
+        // Convertir strings de fechas nuevamente a Date y mapear propiedades antiguas a nuevas
+        this.medicines = medicamentosGuardados.map((med: any) => {
+          // Obtener el estado y convertir valores antiguos a nuevos
+          let statusValue = med.status || med.estado || 'valid';
+          
+          // Mapear valores antiguos de estado a los nuevos
+          if (statusValue === 'vigente') statusValue = 'valid';
+          if (statusValue === 'proximoVencer') statusValue = 'expiringNext';
+          if (statusValue === 'caducado') statusValue = 'expired';
+          
+          // Mapear propiedades antiguas (en español) a nuevas (en inglés)
+          const mappedMed: Medicine = {
+            id: med.id,
+            name: med.name || med.nombre || '',
+            quantity: med.quantity || med.cantidad || 0,
+            unit: med.unit || med.unidad || '',
+            dosage: med.dosage || med.dosis || '',
+            expiryDate: new Date(med.expiryDate || med.fechaVencimiento),
+            status: statusValue as 'valid' | 'expiringNext' | 'expired',
+            instructions: med.instructions || med.indicaciones,
+            selected: med.selected || false,
+          };
+          
+          return mappedMed;
+        });
+        console.log('Medicamentos cargados desde localStorage:', this.medicines.length);
         return;
       } catch (e) {
         console.error('Error al cargar medicamentos desde localStorage:', e);
@@ -91,153 +116,153 @@ export class Medkit implements OnInit {
     const tresMeses = new Date(hoy.getTime() + 90 * 24 * 60 * 60 * 1000);
     const unAño = new Date(hoy.getTime() + 365 * 24 * 60 * 60 * 1000);
 
-    this.medicamentos = [
+    this.medicines = [
       {
         id: 1,
-        nombre: 'Paracetamol 500mg',
-        cantidad: 20,
-        unidad: 'tabletas',
-        dosis: '500mg cada 6-8 horas',
-        fechaVencimiento: tresMeses,
-        estado: 'vigente' as const,
-        indicaciones: 'Para dolor y fiebre',
+        name: 'Paracetamol 500mg',
+        quantity: 20,
+        unit: 'tabletas',
+        dosage: '500mg cada 6-8 horas',
+        expiryDate: tresMeses,
+        status: 'valid' as const,
+        instructions: 'Para dolor y fiebre',
         selected: false,
       },
       {
         id: 2,
-        nombre: 'Ibuprofeno 200mg',
-        cantidad: 15,
-        unidad: 'cápsulas',
-        dosis: '200mg cada 4-6 horas',
-        fechaVencimiento: quinceDias,
-        estado: 'proximoVencer' as const,
-        indicaciones: 'Antiinflamatorio',
+        name: 'Ibuprofeno 200mg',
+        quantity: 15,
+        unit: 'cápsulas',
+        dosage: '200mg cada 4-6 horas',
+        expiryDate: quinceDias,
+        status: 'expiringNext' as const,
+        instructions: 'Antiinflamatorio',
         selected: false,
       },
       {
         id: 3,
-        nombre: 'Amoxicilina 500mg',
-        cantidad: 10,
-        unidad: 'cápsulas',
-        dosis: '500mg cada 8 horas',
-        fechaVencimiento: mañana,
-        estado: 'caducado' as const,
-        indicaciones: 'Antibiótico',
+        name: 'Amoxicilina 500mg',
+        quantity: 10,
+        unit: 'cápsulas',
+        dosage: '500mg cada 8 horas',
+        expiryDate: mañana,
+        status: 'expired' as const,
+        instructions: 'Antibiótico',
         selected: false,
       },
       {
         id: 4,
-        nombre: 'Vitamina C 1000mg',
-        cantidad: 30,
-        unidad: 'tabletas',
-        dosis: '1000mg diarios',
-        fechaVencimiento: unAño,
-        estado: 'vigente' as const,
-        indicaciones: 'Suplemento inmunológico',
+        name: 'Vitamina C 1000mg',
+        quantity: 30,
+        unit: 'tabletas',
+        dosage: '1000mg diarios',
+        expiryDate: unAño,
+        status: 'valid' as const,
+        instructions: 'Suplemento inmunológico',
         selected: false,
       },
       {
         id: 5,
-        nombre: 'Loratadina 10mg',
-        cantidad: 8,
-        unidad: 'tabletas',
-        dosis: '10mg una vez al día',
-        fechaVencimiento: quinceDias,
-        estado: 'proximoVencer' as const,
-        indicaciones: 'Antihistamínico',
+        name: 'Loratadina 10mg',
+        quantity: 8,
+        unit: 'tabletas',
+        dosage: '10mg una vez al día',
+        expiryDate: quinceDias,
+        status: 'expiringNext' as const,
+        instructions: 'Antihistamínico',
         selected: false,
       },
       {
         id: 6,
-        nombre: 'Omeprazol 20mg',
-        cantidad: 14,
-        unidad: 'cápsulas',
-        dosis: '20mg cada 12 horas',
-        fechaVencimiento: new Date(hoy.getTime() - 30 * 24 * 60 * 60 * 1000),
-        estado: 'caducado' as const,
-        indicaciones: 'Para acidez estomacal',
+        name: 'Omeprazol 20mg',
+        quantity: 14,
+        unit: 'cápsulas',
+        dosage: '20mg cada 12 horas',
+        expiryDate: new Date(hoy.getTime() - 30 * 24 * 60 * 60 * 1000),
+        status: 'expired' as const,
+        instructions: 'Para acidez estomacal',
         selected: false,
       },
       {
         id: 7,
-        nombre: 'Metformina 500mg',
-        cantidad: 60,
-        unidad: 'tabletas',
-        dosis: '500mg dos veces al día',
-        fechaVencimiento: unAño,
-        estado: 'vigente' as const,
-        indicaciones: 'Para diabetes',
+        name: 'Metformina 500mg',
+        quantity: 60,
+        unit: 'tabletas',
+        dosage: '500mg dos veces al día',
+        expiryDate: unAño,
+        status: 'valid' as const,
+        instructions: 'Para diabetes',
         selected: false,
       },
       {
         id: 8,
-        nombre: 'Dipirona 500mg',
-        cantidad: 12,
-        unidad: 'tabletas',
-        dosis: '500mg cada 6 horas',
-        fechaVencimiento: tresMeses,
-        estado: 'vigente' as const,
-        indicaciones: 'Analgésico',
+        name: 'Dipirona 500mg',
+        quantity: 12,
+        unit: 'tabletas',
+        dosage: '500mg cada 6 horas',
+        expiryDate: tresMeses,
+        status: 'valid' as const,
+        instructions: 'Analgésico',
         selected: false,
       },
       {
         id: 9,
-        nombre: 'Ceptriaxona 800mg',
-        cantidad: 24,
-        unidad: 'tabletas',
-        dosis: '800mg cada 12 horas',
-        fechaVencimiento: unAño,
-        estado: 'vigente' as const,
-        indicaciones: 'Antibiótico',
+        name: 'Ceptriaxona 800mg',
+        quantity: 24,
+        unit: 'tabletas',
+        dosage: '800mg cada 12 horas',
+        expiryDate: unAño,
+        status: 'valid' as const,
+        instructions: 'Antibiótico',
         selected: false,
       },
       {
         id: 10,
-        nombre: 'Paracetamola 500mg',
-        cantidad: 20,
-        unidad: 'tabletas',
-        dosis: '500mg cada 6-8 horas',
-        fechaVencimiento: tresMeses,
-        estado: 'vigente' as const,
-        indicaciones: 'Para dolor y fiebre',
+        name: 'Paracetamola 500mg',
+        quantity: 20,
+        unit: 'tabletas',
+        dosage: '500mg cada 6-8 horas',
+        expiryDate: tresMeses,
+        status: 'valid' as const,
+        instructions: 'Para dolor y fiebre',
         selected: false,
       },
     ];
 
     // Guardar datos por defecto en localStorage
-    this.guardarMedicamentosEnLocalStorage();
+    this.saveMedicinesToLocalStorage();
   }
 
-  private guardarMedicamentosEnLocalStorage() {
+  private saveMedicinesToLocalStorage() {
     try {
-      localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(this.medicamentos));
+      localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(this.medicines));
       console.log('Medicamentos guardados en localStorage');
     } catch (e) {
       console.error('Error al guardar medicamentos en localStorage:', e);
     }
   }
 
-  calcularEstadisticas() {
-    this.caducados = this.medicamentos.filter((m) => m.estado === 'caducado').length;
-    this.proximosVencer = this.medicamentos.filter((m) => m.estado === 'proximoVencer').length;
-    this.vigentes = this.medicamentos.filter((m) => m.estado === 'vigente').length;
+  calculateStatistics() {
+    this.expired = this.medicines.filter((m) => m.status === 'expired').length;
+    this.expiringNext = this.medicines.filter((m) => m.status === 'expiringNext').length;
+    this.valid = this.medicines.filter((m) => m.status === 'valid').length;
   }
 
-  filtrarMedicamentos() {
+  filterMedicines() {
     if (this.searchTerm.trim() === '') {
-      this.medicamentosFiltrados = [...this.medicamentos];
+      this.filteredMedicines = [...this.medicines];
     } else {
       const termino = this.searchTerm.toLowerCase();
-      this.medicamentosFiltrados = this.medicamentos.filter(
+      this.filteredMedicines = this.medicines.filter(
         (med) =>
-          med.nombre.toLowerCase().includes(termino) ||
-          med.indicaciones?.toLowerCase().includes(termino),
+          med.name.toLowerCase().includes(termino) ||
+          med.instructions?.toLowerCase().includes(termino),
       );
     }
-    console.log('Filtrado aplicado. Mostrar:', this.medicamentosFiltrados.length);
+    console.log('Filtrado aplicado. Mostrar:', this.filteredMedicines.length);
   }
 
-  agregarMedicamento() {}
+  addMedicine() {}
 
   toggleUserMenu() {
     this.showUserMenu = !this.showUserMenu;
@@ -259,96 +284,96 @@ export class Medkit implements OnInit {
     this.openMedDropdowns.delete(medId);
   }
 
-  editarMedicamento(medId: number) {
+  editMedicine(medId: number) {
     console.log('Editar medicamento', medId);
     this.closeMedDropdown(medId);
   }
 
-  eliminarMedicamento(medId: number) {
+  deleteMedicine(medId: number) {
     console.log('Eliminar medicamento', medId);
-    this.medicamentos = this.medicamentos.filter((m) => m.id !== medId);
-    this.guardarMedicamentosEnLocalStorage();
-    this.filtrarMedicamentos();
-    this.calcularEstadisticas();
+    this.medicines = this.medicines.filter((m) => m.id !== medId);
+    this.saveMedicinesToLocalStorage();
+    this.filterMedicines();
+    this.calculateStatistics();
     this.closeMedDropdown(medId);
   }
 
-  toggleSelectMedicamento(medId: number) {
-    const med = this.medicamentos.find((m) => m.id === medId);
+  toggleSelectMedicine(medId: number) {
+    const med = this.medicines.find((m) => m.id === medId);
     if (med) {
       med.selected = !med.selected;
-      this.actualizarConteoSeleccionados();
+      this.updateSelectedCount();
       this.closeMedDropdown(medId);
     }
   }
 
-  isMedicamentoSelected(medId: number): boolean {
-    const med = this.medicamentos.find((m) => m.id === medId);
+  isMedicineSelected(medId: number): boolean {
+    const med = this.medicines.find((m) => m.id === medId);
     return med?.selected || false;
   }
 
-  actualizarConteoSeleccionados() {
-    this.medicamentosSeleccionados = this.medicamentos.filter((m) => m.selected).length;
+  updateSelectedCount() {
+    this.selectedMedicinesCount = this.medicines.filter((m) => m.selected).length;
   }
 
-  deleteSelectedMedicamentos() {
-    this.medicamentos = this.medicamentos.filter((m) => !m.selected);
-    this.medicamentosSeleccionados = 0;
-    this.guardarMedicamentosEnLocalStorage();
-    this.filtrarMedicamentos();
-    this.calcularEstadisticas();
+  deleteSelectedMedicines() {
+    this.medicines = this.medicines.filter((m) => !m.selected);
+    this.selectedMedicinesCount = 0;
+    this.saveMedicinesToLocalStorage();
+    this.filterMedicines();
+    this.calculateStatistics();
   }
 
-  limpiarSeleccion() {
-    this.medicamentos.forEach((m) => (m.selected = false));
-    this.medicamentosSeleccionados = 0;
+  clearSelection() {
+    this.medicines.forEach((m) => (m.selected = false));
+    this.selectedMedicinesCount = 0;
   }
 
-  actualizarMedicamento(medicamentoActualizado: Medicamento) {
-    const indice = this.medicamentos.findIndex((m) => m.id === medicamentoActualizado.id);
+  updateMedicine(medicamentoActualizado: Medicine) {
+    const indice = this.medicines.findIndex((m) => m.id === medicamentoActualizado.id);
     if (indice !== -1) {
-      this.medicamentos[indice] = medicamentoActualizado;
-      this.guardarMedicamentosEnLocalStorage();
-      this.filtrarMedicamentos();
-      this.calcularEstadisticas();
-      console.log('Medicamento actualizado:', medicamentoActualizado.nombre);
+      this.medicines[indice] = medicamentoActualizado;
+      this.saveMedicinesToLocalStorage();
+      this.filterMedicines();
+      this.calculateStatistics();
+      console.log('Medicamento actualizado:', medicamentoActualizado.name);
     }
   }
 
-  agregarMedicamentoNew({
-    nombre,
-    cantidad,
-    unidad,
-    dosis,
-    fechaVencimiento,
-    estado,
-    indicaciones,
+  addNewMedicine({
+    name,
+    quantity,
+    unit,
+    dosage,
+    expiryDate,
+    status,
+    instructions,
   }: {
-    nombre: string;
-    cantidad: number;
-    unidad: string;
-    dosis: string;
-    fechaVencimiento: Date;
-    estado: 'vigente' | 'proximoVencer' | 'caducado';
-    indicaciones: string;
+    name: string;
+    quantity: number;
+    unit: string;
+    dosage: string;
+    expiryDate: Date;
+    status: 'valid' | 'expiringNext' | 'expired';
+    instructions: string;
   }) {
-    const nuevoId = Math.max(...this.medicamentos.map((m) => m.id), 0) + 1;
-    const nuevoMedicamento: Medicamento = {
+    const nuevoId = Math.max(...this.medicines.map((m) => m.id), 0) + 1;
+    const nuevoMedicamento: Medicine = {
       id: nuevoId,
-      nombre,
-      cantidad,
-      unidad,
-      dosis,
-      fechaVencimiento,
-      estado,
-      indicaciones,
+      name,
+      quantity,
+      unit,
+      dosage,
+      expiryDate,
+      status,
+      instructions,
       selected: false,
     };
-    this.medicamentos.push(nuevoMedicamento);
-    this.guardarMedicamentosEnLocalStorage();
-    this.filtrarMedicamentos();
-    this.calcularEstadisticas();
-    console.log('Nuevo medicamento agregado:', nombre);
+    this.medicines.push(nuevoMedicamento);
+    this.saveMedicinesToLocalStorage();
+    this.filterMedicines();
+    this.calculateStatistics();
+    console.log('Nuevo medicamento agregado:', name);
   }
 
   @HostListener('document:click', ['$event'])
@@ -371,7 +396,7 @@ export class Medkit implements OnInit {
     }
   }
 
-  cerrarSesion() {
+  logout() {
     this.showUserMenu = false;
     console.log('Sesión cerrada');
     this.router.navigate(['']);

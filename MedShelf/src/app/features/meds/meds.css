@@ -18,8 +18,8 @@
   margin: 0;
 }
 
-/* ── Título de sección ── */
-.titulo-seccion {
+/* ── Section title ── */
+.section-title {
   color: var(--section-label-color);
   font-size: 0.75rem;
   font-weight: 600;
@@ -28,12 +28,12 @@
   margin: 0 0 0.75rem;
 }
 
-/* ── Medicamentos activos ── */
-.seccion-activos {
+/* ── Active medicines ── */
+.active-section {
   margin-bottom: 1.5rem;
 }
 
-.activos-scroll {
+.active-scroll {
   display: flex;
   gap: 0.75rem;
   overflow-x: auto;
@@ -42,11 +42,11 @@
   scrollbar-width: none;
 }
 
-.activos-scroll::-webkit-scrollbar {
+.active-scroll::-webkit-scrollbar {
   display: none;
 }
 
-.tarjeta-activo {
+.active-card {
   min-width: 140px;
   background: var(--card-bg);
   border: 1px solid var(--border-light);
@@ -58,12 +58,12 @@
   gap: 0.25rem;
 }
 
-.activo-icono {
+.active-icon {
   font-size: 1.75rem;
   margin-bottom: 0.25rem;
 }
 
-.activo-nombre {
+.active-name {
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--heading-color);
@@ -73,20 +73,20 @@
   text-overflow: ellipsis;
 }
 
-.activo-dosis {
+.active-dosage {
   font-size: 0.85rem;
   color: var(--text-tertiary);
   margin: 0;
 }
 
-.activo-progreso {
+.active-progress {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   margin-top: 0.75rem;
 }
 
-.barra-progreso {
+.progress-bar {
   flex: 1;
   height: 5px;
   background: var(--bg-secondary);
@@ -94,14 +94,14 @@
   overflow: hidden;
 }
 
-.barra-fill {
+.progress-fill {
   height: 100%;
   background: var(--primary-blue);
   border-radius: 10px;
   transition: width 0.3s ease;
 }
 
-.activo-dias {
+.active-days {
   font-size: 0.8rem;
   color: var(--primary-blue);
   font-weight: 600;
@@ -115,7 +115,7 @@
   gap: 0.75rem;
 }
 
-.label-horario {
+.time-label {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--section-label-color);

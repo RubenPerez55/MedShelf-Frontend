@@ -75,7 +75,7 @@ main {
 
 .btn-login {
     padding: 1rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--brand-color);
     color: white;
     border: none;
     border-radius: 8px;

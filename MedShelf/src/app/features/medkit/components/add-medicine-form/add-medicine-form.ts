@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, HostListener, ViewChild, ElementRef, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -32,6 +32,8 @@ export class AddMedicineForm implements OnInit, OnDestroy {
   private readonly placesService = inject(PlacesService);
   private readonly itemsService = inject(ItemsService);
 
+  @ViewChild('expirationDateInput') expirationDateInput!: ElementRef<HTMLInputElement>;
+
   private readonly destroy$ = new Subject<void>();
   private readonly searchInput$ = new Subject<string>();
 
@@ -45,7 +47,6 @@ export class AddMedicineForm implements OnInit, OnDestroy {
     expirationDate: '',
   };
 
-  // Combobox state
   productSearchText = '';
   selectedProductName = '';
   isDropdownOpen = false;
@@ -54,6 +55,12 @@ export class AddMedicineForm implements OnInit, OnDestroy {
 
   isLoading = false;
   errorMessage = '';
+
+  minExpirationDate = computed(() => {
+    const today = new Date();
+    today.setDate(today.getDate() + 2);
+    return today.toISOString().split('T')[0];
+  });
 
   get products() {
     return this.productsService.products();
@@ -137,6 +144,12 @@ export class AddMedicineForm implements OnInit, OnDestroy {
 
   openDropdown() {
     this.isDropdownOpen = true;
+  }
+
+  openDatePicker() {
+    if (!this.isLoading) {
+      this.expirationDateInput?.nativeElement?.showPicker();
+    }
   }
 
   selectProduct(product: ProductOption) {

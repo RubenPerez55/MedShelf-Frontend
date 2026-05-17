@@ -207,7 +207,6 @@ div {
     transform 0.3s ease,
     box-shadow 0.3s ease;
   min-height: 140px;
-  /* border: 1px solid var(--border-lighter); */
   border-left: 5px solid var(--primary-blue);
   overflow: visible;
   z-index: 1;
@@ -507,6 +506,41 @@ div {
   font-size: 1rem;
 }
 
+/* ── FAB Descarga ── */
+.fab-download {
+  position: fixed;
+  top: 41.75rem;
+  right: 1.40rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
+}
+
+.fab-download:hover {
+  background-color: #f3f4f6;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+}
+
+.fab-download:active {
+  transform: scale(0.92);
+}
+
+.fab-download:focus {
+  outline: 2px solid var(--brand-color);
+  outline-offset: 2px;
+}
+
 /* ── FAB ── */
 .fab {
   position: fixed;
@@ -537,6 +571,10 @@ div {
 
 .fab:active {
   transform: scale(0.92);
+}
+
+.fab-download .fab-icon {
+  color: var(--text-primary);
 }
 
 /* ── Touch & Focus ── */

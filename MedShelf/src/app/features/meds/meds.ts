@@ -110,38 +110,50 @@ export class Meds implements OnInit, OnDestroy {
       return;
     }
 
-    // cargar items del botiquín y guardar bajo treatmentId
-    this.itemsService
-      .getItemsInMedkit(treatment.product.id, { 'filter[productId]': treatment.product.id })
-      .subscribe({
-        next: (response: any) => {
-          this.itemDetails.update((prev) => ({
-            ...prev,
-            [treatmentId]: (response?.items ?? []) as ExpandedItem[],
-          }));
-          this.expandedId.set(treatmentId);
-          console.log('Items del tratamiento cargados:', response);
-        },
-        error: () => {
-          // Si hay error, mostrar lista vacía igualmente
-          this.itemDetails.update((prev) => ({
-            ...prev,
-            [treatmentId]: [],
-          }));
-          this.expandedId.set(treatmentId);
-        },
-      });
+    this.loadTreatmentItems(treatment, true);
   }
 
-  registerConsumption(itemId: string, amount: number): void {
+  registerConsumption(itemId: string, amount: number, treatment: TreatmentResponse): void {
     this.consumptionsService.addConsumption(itemId, amount).subscribe({
       next: () => {
+        this.loadTreatmentItems(treatment, false);
         this.loadTreatments();
       },
       error: () => {
         this.errorMessage = 'Error al registrar el consumo';
       },
     });
+  }
+
+  private loadTreatmentItems(treatment: TreatmentResponse, expandAfterLoad: boolean): void {
+    this.itemsService
+      .getItemsInMedkit(treatment.product.id, { 'filter[productId]': treatment.product.id })
+      .subscribe({
+        next: (response: any) => {
+          const availableItems = ((response?.items ?? []) as ExpandedItem[]).filter(
+            (item) => (item.availableContent ?? 0) > 0,
+          );
+
+          this.itemDetails.update((prev) => ({
+            ...prev,
+            [treatment.id]: availableItems,
+          }));
+
+          if (expandAfterLoad) {
+            this.expandedId.set(treatment.id);
+          }
+        },
+        error: () => {
+          this.itemDetails.update((prev) => ({
+            ...prev,
+            [treatment.id]: [],
+          }));
+
+          if (expandAfterLoad) {
+            this.expandedId.set(treatment.id);
+          }
+        },
+      });
   }
 
   openQrModal(treatment: TreatmentResponse): void {

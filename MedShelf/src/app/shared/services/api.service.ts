@@ -23,6 +23,13 @@ export class ApiService {
     return this.http.get<T>(`${this.apiUrl}${endpoint}`, this.options(options));
   }
 
+  getBlob(endpoint: string, options: object = {}) {
+    return this.http.get(`${this.apiUrl}${endpoint}`, {
+      ...this.options(options),
+      responseType: 'blob' as const,
+    });
+  }
+
   // Ejemplo de método POST
   post<T>(endpoint: string, data: any) {
     return this.http.post<T>(`${this.apiUrl}${endpoint}`, data, this.options());

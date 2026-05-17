@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { LucideAngularModule, Plus, ChevronDown, ArrowLeft, Pill, PillBottle } from 'lucide-angular';
 import { RouterLink } from '@angular/router';
 import { TreatmentsService, TreatmentResponse } from '../../core/services/treatments.service';
 import { ProfilesService } from '../../core/services/profiles.service';
 import { ItemsService } from '../../core/services/items.service';
 import { ConsumptionsService } from '../../core/services/consumptions.service';
-import { signal } from '@angular/core';
 
 interface ExpandedItem {
   id: string;
@@ -28,14 +27,19 @@ interface ExpandedItem {
   templateUrl: './meds.html',
   styleUrl: './meds.css',
 })
-export class Meds implements OnInit {
+export class Meds implements OnInit, OnDestroy {
   private readonly treatmentsService = inject(TreatmentsService);
   private readonly profilesService = inject(ProfilesService);
   private readonly itemsService = inject(ItemsService);
   private readonly consumptionsService = inject(ConsumptionsService);
+  private currentQrObjectUrl: string | null = null;
 
   icons = { plus: Plus, chevronDown: ChevronDown, arrowLeft: ArrowLeft, pillBottle: PillBottle, pill: Pill };
   isLoading = false;
+  qrLoading = signal(false);
+  showQrModal = signal(false);
+  selectedQrTreatment = signal<TreatmentResponse | null>(null);
+  qrImageUrl = signal<string | null>(null);
   errorMessage = '';
   treatments = signal<TreatmentResponse[]>([]);
   expandedId = signal<string | null>(null);
@@ -53,6 +57,10 @@ export class Meds implements OnInit {
 
   ngOnInit(): void {
     this.loadTreatments();
+  }
+
+  ngOnDestroy(): void {
+    this.revokeQrObjectUrl();
   }
 
   isActive(treatment: TreatmentResponse): boolean {
@@ -134,5 +142,42 @@ export class Meds implements OnInit {
         this.errorMessage = 'Error al registrar el consumo';
       },
     });
+  }
+
+  openQrModal(treatment: TreatmentResponse): void {
+    this.selectedQrTreatment.set(treatment);
+    this.showQrModal.set(true);
+    this.qrLoading.set(true);
+    this.errorMessage = '';
+
+    this.revokeQrObjectUrl();
+
+    this.treatmentsService.getTreatmentQr(treatment.id).subscribe({
+      next: (blob) => {
+        const objectUrl = URL.createObjectURL(blob);
+        this.currentQrObjectUrl = objectUrl;
+        this.qrImageUrl.set(objectUrl);
+        this.qrLoading.set(false);
+      },
+      error: () => {
+        this.qrLoading.set(false);
+        this.errorMessage = 'No se pudo generar el QR del tratamiento.';
+      },
+    });
+  }
+
+  closeQrModal(): void {
+    this.showQrModal.set(false);
+    this.selectedQrTreatment.set(null);
+    this.qrImageUrl.set(null);
+    this.qrLoading.set(false);
+    this.revokeQrObjectUrl();
+  }
+
+  private revokeQrObjectUrl(): void {
+    if (this.currentQrObjectUrl) {
+      URL.revokeObjectURL(this.currentQrObjectUrl);
+      this.currentQrObjectUrl = null;
+    }
   }
 }

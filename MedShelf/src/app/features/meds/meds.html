@@ -88,6 +88,13 @@
                       >
                         Tomar dosis
                       </button>
+                      <button
+                        class="detail-btn detail-btn-secondary"
+                        type="button"
+                        (click)="openQrModal(treatment)"
+                      >
+                        Ver QR
+                      </button>
                     </div>
                   </div>
                 }
@@ -106,4 +113,27 @@
   <a class="fab" routerLink="add-treatment" title="Agregar tratamiento">
     <lucide-angular [img]="icons.plus" size="24" class="fab-icon"></lucide-angular>
   </a>
+
+  @if (showQrModal()) {
+    <div class="qr-modal-backdrop" (click)="closeQrModal()">
+      <div class="qr-modal" (click)="$event.stopPropagation()">
+        <div class="qr-modal-header">
+          <div>
+            <p class="qr-modal-kicker">Código QR</p>
+            <h3>{{ selectedQrTreatment()?.product?.name ?? 'Tratamiento' }}</h3>
+          </div>
+          <button type="button" class="qr-modal-close" (click)="closeQrModal()">×</button>
+        </div>
+
+        @if (qrLoading()) {
+          <p class="qr-modal-loading">Generando QR...</p>
+        } @else if (qrImageUrl()) {
+          <div class="qr-modal-body">
+            <img [src]="qrImageUrl()!" alt="Código QR del tratamiento" class="qr-image" />
+            <p class="qr-modal-note">Escanéalo para ver el resumen del tratamiento.</p>
+          </div>
+        }
+      </div>
+    </div>
+  }
 </main>

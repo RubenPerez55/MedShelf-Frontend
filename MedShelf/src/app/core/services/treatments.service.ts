@@ -124,6 +124,10 @@ export class TreatmentsService {
       .pipe(tap((treatment) => this._selectedTreatment.set(treatment)));
   }
 
+  getTreatmentQr(treatmentId: string) {
+    return this.api.getBlob(`/treatments/${treatmentId}/qr`);
+  }
+
   updateTreatment(treatmentId: string, updateTreatmentRequest: UpdateTreatmentRequest) {
     return this.api
       .patch<TreatmentResponse>(`/treatments/${treatmentId}`, updateTreatmentRequest)

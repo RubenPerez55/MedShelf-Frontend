@@ -525,8 +525,8 @@ div {
 /* ── FAB Descarga ── */
 .fab-download {
   position: fixed;
-  top: 41.75rem;
-  right: 1.4rem;
+  right: 1.35rem;
+  bottom: 8.5rem;
   width: 44px;
   height: 44px;
   border-radius: 50%;

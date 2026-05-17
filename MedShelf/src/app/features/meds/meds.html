@@ -88,10 +88,18 @@
                       </div>
                       <div class="detail-actions">
                         <button
+                          type="button"
                           class="detail-btn detail-btn-primary"
-                          (click)="registerConsumption(medItem.id, treatment.dose)"
+                          (click)="registerConsumption(medItem.id, treatment.dose, treatment)"
                         >
                           Tomar dosis
+                        </button>
+                        <button
+                          type="button"
+                          class="detail-btn detail-btn-secondary"
+                          (click)="openQrModal(treatment)"
+                        >
+                          Ver QR
                         </button>
                       </div>
                       <div class="detail-row">
@@ -100,21 +108,6 @@
                           medItem.expirationDate | date: 'dd/MM/yyyy'
                         }}</span>
                       </div>
-                    </div>
-                    <div class="detail-actions">
-                      <button
-                        class="detail-btn detail-btn-primary"
-                        (click)="registerConsumption(medItem.id, treatment.dose)"
-                      >
-                        Tomar dosis
-                      </button>
-                      <button
-                        class="detail-btn detail-btn-secondary"
-                        type="button"
-                        (click)="openQrModal(treatment)"
-                      >
-                        Ver QR
-                      </button>
                     </div>
                   }
                 } @else {

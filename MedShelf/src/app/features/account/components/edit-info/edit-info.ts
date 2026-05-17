@@ -1,4 +1,13 @@
-import { Component, OnInit, signal, ChangeDetectorRef, inject, ViewChild, ElementRef, computed } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  signal,
+  ChangeDetectorRef,
+  inject,
+  ViewChild,
+  ElementRef,
+  computed,
+} from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -69,14 +78,19 @@ export class EditInfo implements OnInit {
       next: (authData) => {
         console.log('Datos de auth/account:', authData);
 
+        // Obtener datos del perfil (alergias, fecha de nacimiento) desde /profiles
         this.apiService.get<any>('/profiles').subscribe({
           next: (response) => {
             console.log('Respuesta completa de /profiles:', response);
             const profiles = response.items ?? [];
+            console.log('Perfiles array:', profiles);
 
             if (profiles && profiles.length > 0) {
               const userProfile = profiles[0];
               console.log('Primer perfil (usuario):', userProfile);
+              console.log('Alergias del perfil:', userProfile.allergies);
+
+              const birthDate = this.normalizeDateInput(userProfile.birthDate);
 
               this.profileData.set({
                 id: authData.id || '',
@@ -149,38 +163,50 @@ export class EditInfo implements OnInit {
   saveProfile() {
     this.isLoading.set(true);
     const current = this.profileData();
+    console.log('Datos actuales del perfil a guardar:', current);
 
+    // Validar que birthDate tenga el formato correcto YYYY-MM-DD
     if (!current.birthDate) {
       this.showError('La fecha de nacimiento es requerida');
       this.isLoading.set(false);
       return;
     }
 
-    let formattedBirthDate = current.birthDate;
-    if (formattedBirthDate.includes('T')) {
-      formattedBirthDate = formattedBirthDate.split('T')[0];
-    }
+    // Asegurar formato YYYY-MM-DD
+    const formattedBirthDate = this.normalizeDateInput(current.birthDate);
 
+    // 1. Actualizar nombre y email en /auth/account usando PATCH
     const authDataToSave = {
       name: current.name.trim(),
       email: current.email.trim(),
     };
 
+    console.log('Guardando datos de cuenta:', authDataToSave);
+
     this.apiService.patch('/auth/account', authDataToSave).subscribe({
       next: (authResponse: any) => {
         console.log('Datos de cuenta actualizados:', authResponse);
 
+        // 2. Después de actualizar /auth/account, actualizar /profiles
         const profileDataToSave = {
           name: current.name.trim(),
           birthDate: formattedBirthDate,
           allergies: current.allergies && current.allergies.length > 0 ? current.allergies : [],
         };
 
-        const profileRequest$ = current.profileId && current.profileId.trim()
-          ? this.apiService.patch(`/profiles/${current.profileId}`, profileDataToSave)
-          : this.apiService.post('/profiles', profileDataToSave);
+        // console.log('Guardando datos de perfil:', profileDataToSave);
+        // console.log('Array de alergias:', current.allergies);
+        // console.log('Cantidad de alergias:', current.allergies?.length);
+        // console.log('ID del perfil:', current.profileId);
 
-        const profileAction = current.profileId && current.profileId.trim() ? 'actualizar' : 'crear';
+        // Usar PATCH si existe profileId (actualizar perfil existente), POST si es nuevo
+        const profileRequest$ =
+          current.profileId && current.profileId.trim()
+            ? this.apiService.patch(`/profiles/${current.profileId}`, profileDataToSave)
+            : this.apiService.post('/profiles', profileDataToSave);
+
+        const profileAction =
+          current.profileId && current.profileId.trim() ? 'actualizar' : 'crear';
 
         profileRequest$.subscribe({
           next: (profileResponse: any) => {
@@ -233,5 +259,11 @@ export class EditInfo implements OnInit {
       this.isToastExiting = false;
       this.cdr.detectChanges();
     }, 300);
+  }
+
+  private normalizeDateInput(value: string) {
+    if (!value) return '';
+
+    return value.includes('T') ? value.split('T')[0] : value.slice(0, 10);
   }
 }

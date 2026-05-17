@@ -7,7 +7,25 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
+}
+
+.error-banner,
+.loading-state {
+  padding: 0.95rem 1rem;
+  border-radius: 14px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-lighter);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.error-banner {
+  background: rgba(220, 38, 38, 0.08);
+  color: #b91c1c;
+  border-color: rgba(220, 38, 38, 0.2);
 }
 
 .header-actions {
@@ -26,27 +44,60 @@
 }
 
 .btn-back {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 8px;
-  color: var(--primary-blue);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease;
-}
-
-.btn-back:hover {
-  background-color: var(--bg-secondary);
+  color: var(--primary-contrast);
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
 }
 
 .edit-form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  max-width: 100%;
+  gap: 1.15rem;
+}
+
+.form-card {
+  padding: 1rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(24, 95, 165, 0.12), rgba(48, 181, 231, 0.08));
+  border: 1px solid rgba(24, 95, 165, 0.12);
+}
+
+.profile-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.profile-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--primary-blue);
+  color: white;
+  display: grid;
+  place-items: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.profile-title {
+  margin: 0;
+  color: var(--heading-color);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.profile-subtitle {
+  margin: 0.2rem 0 0;
+  color: var(--text-tertiary);
+  font-size: 0.9rem;
 }
 
 .form-group {
@@ -76,18 +127,6 @@ select {
   font-family: inherit;
 }
 
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: var(--primary-contrast);
-}
-
-textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
 .select-input {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
@@ -97,7 +136,23 @@ textarea {
   cursor: pointer;
 }
 
-/* Alergias */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary-contrast);
+}
+
+input:disabled {
+  opacity: 0.78;
+  cursor: not-allowed;
+}
+
+.field-hint {
+  color: var(--text-tertiary);
+  font-size: 0.8rem;
+}
+
 .allergy-input-wrapper {
   display: flex;
   gap: 0.5rem;
@@ -106,7 +161,6 @@ textarea {
 
 .allergy-input-wrapper input {
   flex: 1;
-  margin: 0;
 }
 
 .btn-add-allergy {
@@ -125,11 +179,6 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.btn-add-allergy:hover {
-  background-color: var(--primary-contrast);
-  border-color: var(--primary-contrast);
 }
 
 .allergies-list {
@@ -160,19 +209,13 @@ textarea {
   padding: 0;
   display: flex;
   align-items: center;
-  transition: color 0.3s ease;
 }
 
-.btn-remove:hover {
-  color: var(--primary-contrast);
-}
-
-/* Botones de acción */
 .form-actions {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   margin-bottom: 3rem;
 }
 
@@ -203,8 +246,9 @@ textarea {
   background-color: var(--primary-contrast);
 }
 
-.btn-save:active {
-  transform: scale(0.98);
+.btn-save:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
 }
 
 .btn-cancel {
@@ -218,7 +262,6 @@ textarea {
   border-color: var(--input-border);
 }
 
-/* ── Toast Notification ── */
 .toast-notification {
   position: fixed;
   top: 1rem;
@@ -269,14 +312,6 @@ textarea {
   border-radius: 8px;
 }
 
-.toast-icon {
-  flex-shrink: 0;
-}
-
-.toast-message {
-  flex: 1;
-}
-
 .toast-message p {
   margin: 0;
   font-size: 0.95rem;
@@ -297,7 +332,6 @@ textarea {
   justify-content: center;
   flex-shrink: 0;
   opacity: 0.8;
-  transition: opacity 0.2s;
 }
 
 .toast-close:hover {

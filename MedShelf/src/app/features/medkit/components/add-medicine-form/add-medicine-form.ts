@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy, inject, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, HostListener, ViewChild, ElementRef, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { LucideAngularModule, ArrowLeft, Check, ChevronDown, X } from 'lucide-angular';
+import { LucideAngularModule, ArrowLeft, Check, ChevronDown, X, Save } from 'lucide-angular';
 import { ProductsService, type ProductResponse } from '../../../../core/services/products.service';
 import { PlacesService, type PlaceResponse } from '../../../../core/services/places.service';
 import { ItemsService, AddItemToPlaceRequest } from '../../../../core/services/items.service';
@@ -32,10 +32,12 @@ export class AddMedicineForm implements OnInit, OnDestroy {
   private readonly placesService = inject(PlacesService);
   private readonly itemsService = inject(ItemsService);
 
+  @ViewChild('expirationDateInput') expirationDateInput!: ElementRef<HTMLInputElement>;
+
   private readonly destroy$ = new Subject<void>();
   private readonly searchInput$ = new Subject<string>();
 
-  icons = { arrowLeft: ArrowLeft, check: Check, chevronDown: ChevronDown, x: X };
+  icons = { arrowLeft: ArrowLeft, check: Check, chevronDown: ChevronDown, x: X, save: Save };
 
   places: PlaceOption[] = [];
 
@@ -45,7 +47,6 @@ export class AddMedicineForm implements OnInit, OnDestroy {
     expirationDate: '',
   };
 
-  // Combobox state
   productSearchText = '';
   selectedProductName = '';
   isDropdownOpen = false;
@@ -54,6 +55,12 @@ export class AddMedicineForm implements OnInit, OnDestroy {
 
   isLoading = false;
   errorMessage = '';
+
+  minExpirationDate = computed(() => {
+    const today = new Date();
+    today.setDate(today.getDate() + 2);
+    return today.toISOString().split('T')[0];
+  });
 
   get products() {
     return this.productsService.products();
@@ -108,19 +115,43 @@ export class AddMedicineForm implements OnInit, OnDestroy {
 
   loadPlaces() {
     const houseId = this.housesService.house()?.id;
-    if (!houseId) {
-      this.errorMessage = 'No se encontró una casa asociada.';
+    if (houseId) {
+      this.placesService.getPlaces(houseId).subscribe({
+        next: () => {
+          this.places = this.placesService.places().map((place: PlaceResponse) => ({
+            id: place.id,
+            name: place.name,
+          }));
+        },
+        error: () => {
+          this.errorMessage = 'No se pudieron cargar los lugares.';
+        },
+      });
       return;
     }
-    this.placesService.getPlaces(houseId).subscribe({
-      next: () => {
-        this.places = this.placesService.places().map((place: PlaceResponse) => ({
-          id: place.id,
-          name: place.name,
-        }));
+
+    // Si no hay casa en el servicio, intentar obtenerla desde la API y luego cargar lugares
+    this.housesService.myHouses().subscribe({
+      next: (house) => {
+        const id = house?.id;
+        if (!id) {
+          this.errorMessage = 'No se encontró una casa asociada.';
+          return;
+        }
+        this.placesService.getPlaces(id).subscribe({
+          next: () => {
+            this.places = this.placesService.places().map((place: PlaceResponse) => ({
+              id: place.id,
+              name: place.name,
+            }));
+          },
+          error: () => {
+            this.errorMessage = 'No se pudieron cargar los lugares.';
+          },
+        });
       },
       error: () => {
-        this.errorMessage = 'No se pudieron cargar los lugares.';
+        this.errorMessage = 'No se encontró una casa asociada.';
       },
     });
   }
@@ -137,6 +168,12 @@ export class AddMedicineForm implements OnInit, OnDestroy {
 
   openDropdown() {
     this.isDropdownOpen = true;
+  }
+
+  openDatePicker() {
+    if (!this.isLoading) {
+      this.expirationDateInput?.nativeElement?.showPicker();
+    }
   }
 
   selectProduct(product: ProductOption) {

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, computed, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, Eye, EyeOff } from 'lucide-angular';
@@ -23,8 +23,11 @@ export class Register {
   private apiService = inject(ApiService);
   private router = inject(Router);
 
+  @ViewChild('birthDateInput') birthDateInput!: ElementRef<HTMLInputElement>;
+
   fullname = signal('');
   email = signal('');
+  birthDate = signal('');
   password = signal('');
   confirmPassword = signal('');
   isLoading = signal(false);
@@ -37,10 +40,23 @@ export class Register {
     eyeOff: EyeOff,
   };
 
+  // Fecha máxima permitida: hace exactamente 18 años
+  maxBirthDate = computed(() => {
+    const today = new Date();
+    today.setFullYear(today.getFullYear() - 18);
+    return today.toISOString().split('T')[0];
+  });
+
+  openDatePicker() {
+    if (!this.isLoading()) {
+      this.birthDateInput?.nativeElement?.showPicker();
+    }
+  }
+
   // Validar que las contraseñas coincidan
   passwordsMatch(): boolean {
     if (!this.password() || !this.confirmPassword()) {
-      return true; // No mostrar error si está vacío
+      return true;
     }
     return this.password() === this.confirmPassword();
   }
@@ -84,58 +100,82 @@ export class Register {
     return '';
   }
 
+  // Validar fecha de nacimiento
+  validateBirthDate(): string {
+    if (!this.birthDate()) {
+      return 'La fecha de nacimiento es requerida.';
+    }
+
+    const birth = new Date(this.birthDate());
+    const today = new Date();
+    const age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      const actualAge = age - 1;
+      if (actualAge < 18) {
+        return 'Debes ser mayor de 18 años para registrarte.';
+      }
+    } else {
+      if (age < 18) {
+        return 'Debes ser mayor de 18 años para registrarte.';
+      }
+    }
+
+    return '';
+  }
+
   // Validar contraseña según los requisitos del frontend
   validatePassword(): string {
     if (this.password().length < 5) {
       return 'La contraseña debe tener al menos 5 caracteres.';
     }
-    
+
     if (this.password().length > 50) {
       return 'La contraseña no puede exceder 50 caracteres.';
     }
-    
-    // Verificar que contenga al menos una letra
+
     if (!/[a-zA-Z]/.test(this.password())) {
       return 'La contraseña debe contener al menos una letra.';
     }
-    
-    // Verificar que contenga al menos una mayúscula
+
     if (!/[A-Z]/.test(this.password())) {
       return 'La contraseña debe contener al menos una letra mayúscula.';
     }
-    
+
     return '';
   }
 
   onSubmit() {
-    // Validar campos vacíos
-    if (!this.fullname() || !this.email() || !this.password() || !this.confirmPassword()) {
+    if (!this.fullname() || !this.email() || !this.birthDate() || !this.password() || !this.confirmPassword()) {
       this.errorMessage.set('Completa todos los campos.');
       return;
     }
 
-    // Validar nombre completo
     const fullnameError = this.validateFullname();
     if (fullnameError) {
       this.errorMessage.set(fullnameError);
       return;
     }
 
-    // Validar email
     const emailError = this.validateEmail();
     if (emailError) {
       this.errorMessage.set(emailError);
       return;
     }
 
-    // Validar contraseña (requisitos del frontend)
+    const birthDateError = this.validateBirthDate();
+    if (birthDateError) {
+      this.errorMessage.set(birthDateError);
+      return;
+    }
+
     const passwordError = this.validatePassword();
     if (passwordError) {
       this.errorMessage.set(passwordError);
       return;
     }
 
-    // Validar que las contraseñas coincidan
     if (this.password() !== this.confirmPassword()) {
       this.errorMessage.set('Las contraseñas no coinciden.');
       return;
@@ -144,46 +184,34 @@ export class Register {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    // Registrar usuario - El backend valida como protección
     this.authService.register(this.fullname().trim(), this.email().trim(), this.password()).subscribe({
       next: (response) => {
         console.log('Registro exitoso:', response);
-        
-        // Crear perfil automáticamente con el nombre del usuario registrado
+
         const profileData = {
           name: this.fullname().trim(),
-          birthDate: null,
-          allergies: []
+          birthDate: this.birthDate()
         };
-        
+
         this.apiService.post('/profiles', profileData).subscribe({
           next: (profileResponse) => {
             console.log('Perfil creado automáticamente:', profileResponse);
             this.isLoading.set(false);
-            // Navegar al componente de éxito
             this.router.navigate(['/successful-registration']);
           },
           error: (profileError) => {
-            console.error('Error al crear perfil automático:', profileError);
-            console.error('Detalles del error completos:', {
-              status: profileError?.status,
-              statusText: profileError?.statusText,
-              errorBody: profileError?.error,
-              message: profileError?.message,
-            });
+            console.error('Error al crear perfil automático:');
+            console.error('Status:', profileError?.status);
+            console.error('Body:', JSON.stringify(profileError?.error, null, 2));
+            console.error('Message:', profileError?.statusText);
             this.isLoading.set(false);
-            // Navegar igual aunque falle la creación del perfil
             this.router.navigate(['/successful-registration']);
           },
         });
       },
       error: (error) => {
         this.isLoading.set(false);
-        // Mostrar mensajes de error en español según el tipo de error
         if (error?.status === 422) {
-          // Unprocessable Entity - Errores de validación
-
-          // Analizar errores específicos del backend
           if (error?.error?.errors) {
             const backendErrors = error.error.errors;
             if (backendErrors.email) {
@@ -193,18 +221,14 @@ export class Register {
             } else {
               this.errorMessage.set('Los datos ingresados no son válidos.');
             }
-          }  
+          }
         } else if (error?.status === 409) {
-          // Conflicto - recurso duplicado (probablemente correo duplicado)
           this.errorMessage.set('Este correo ya está registrado.');
         } else if (error?.status === 400) {
-          // Bad Request
           this.errorMessage.set('Los datos ingresados no son válidos.');
         } else if (error?.status === 500) {
-          // Error del servidor
           this.errorMessage.set('Error en el servidor. Intenta de nuevo más tarde.');
         } else {
-          // Error desconocido
           this.errorMessage.set('No se pudo completar el registro. Intenta de nuevo.');
         }
         console.error('Error en registro:', error);
@@ -212,4 +236,3 @@ export class Register {
     });
   }
 }
-

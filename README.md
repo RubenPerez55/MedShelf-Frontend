@@ -7,7 +7,7 @@
 
 ## 📋 Descripción
 
-**MedShelf** es una aplicación web moderna y responsiva diseñada para ayudarte a organizar y gestionar tu botiquín familiar de manera eficiente. Permite llevar un control detallado de medicamentos, su cantidad, dosis, fecha de vencimiento y estado de conservación.
+**MedShelf** es una aplicación móvil moderna y responsiva diseñada para ayudarte a organizar y gestionar tu botiquín familiar de manera eficiente. Permite llevar un control detallado de medicamentos, su cantidad, dosis, fecha de vencimiento y estado de conservación.
 
 Con una interfaz intuitiva y amigable, MedShelf te proporciona las herramientas necesarias para mantener tu botiquín siempre actualizado y accesible desde cualquier dispositivo.
 

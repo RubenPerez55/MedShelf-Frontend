@@ -126,9 +126,7 @@
 
           <div class="med-details">
             <div class="med-info">
-              <!-- availableContent viene del endpoint GET /items -->
               <p><strong>Disponible:</strong> {{ med.quantity }} {{ med.unit }}</p>
-              <!-- place.name viene del endpoint -->
               <p><strong>Ubicación:</strong> {{ med.placeName }}</p>
             </div>
 
@@ -147,6 +145,11 @@
       }
     </div>
   </section>
+
+  <!-- Botón de Descarga Flotante -->
+  <button class="fab-download" (click)="downloadPDF()" title="Descargar botiquín en PDF">
+    <lucide-angular [img]="icons.download" size="20" class="fab-icon"></lucide-angular>
+  </button>
 
   <!-- Botón de Acción Flotante -->
   <a class="fab" routerLink="add-medicine" title="Agregar medicamento">

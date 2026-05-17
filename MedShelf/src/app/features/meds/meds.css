@@ -388,3 +388,9 @@
 .fab:active {
   transform: scale(0.92);
 }
+
+.no-results {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-tertiary);
+}
